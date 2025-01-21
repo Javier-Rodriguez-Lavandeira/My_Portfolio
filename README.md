@@ -1,6 +1,6 @@
 ## Description 📑
 
-This portfolio has been created with HTML and CSS
+This portfolio has been created using HTML and CSS
 
 ## Author ✒️
 **Javier Rodríguez Lavandeira**
