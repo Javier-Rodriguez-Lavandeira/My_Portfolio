@@ -10,4 +10,4 @@ This portfolio has been created with HTML and CSS
 * [Porfolio web](https://tu-dominio.com/)
 
 ## License 📄
-MIT Public License v3.0
+MIT Public License 
