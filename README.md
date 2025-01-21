@@ -7,7 +7,7 @@ This portfolio has been created using HTML and CSS
 
 * [javirlcy@gmail.com](javirlcy@gmail.com)
 * [LinkedIn](https://www.linkedin.com/in/javier-rodríguez-lavandeira-890284333)
-* [Porfolio web](https://javier-rodriguez-lavandeira.github.io/My_Portfolio/)
+* [Porfolio web]()
 
 ## License 📄
 MIT Public License 
