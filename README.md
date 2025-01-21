@@ -2,7 +2,7 @@
 
 This portfolio has been created with HTML and CSS
 
-## Autor ✒️
+## Author ✒️
 **Javier Rodríguez Lavandeira**
 
 * [javirlcy@gmail.com](javirlcy@gmail.com)
