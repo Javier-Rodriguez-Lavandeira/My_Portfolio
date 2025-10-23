@@ -114,7 +114,7 @@ body {
     margin: 0.3rem 0;
 }
 
-.education-content, .experience-content {
+.experience-content {
     flex: 1; 
     padding-right: 1rem;
     text-align: left;
@@ -242,4 +242,5 @@ body {
     background: #007bff;
     color: white;
 }
+
 
