@@ -89,7 +89,6 @@ body {
 
 .education-item, .experience-item {
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
     align-items: center;
     margin: 1rem 0;
@@ -235,6 +234,7 @@ body {
     background: #007bff;
     color: white;
 }
+
 
 
 
