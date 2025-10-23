@@ -120,6 +120,14 @@ body {
     text-align: left;
 }
 
+.education-content{
+    display: flex;
+      flex-direction: column; 
+      gap: 20px; 
+      align-items: flex-start;
+
+}
+
 .education-logo img, .experience-logo img {
     max-width: 200px; 
     max-height: 160px; 
@@ -234,3 +242,4 @@ body {
     background: #007bff;
     color: white;
 }
+
