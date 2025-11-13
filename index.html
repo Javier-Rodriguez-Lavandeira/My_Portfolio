@@ -1,226 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio - Javier Rodríguez Lavandeira</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio - Javier Rodríguez Lavandeira</title>
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Iconos -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+
+  <!-- Tipografía -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
 </head>
+
 <body>
-    
-    <header class="main-header">
-        <div class="container">
-            <img src="images/Foto_Orla_comprimida.jpg" class="profile-photo">
-            <h1>Javier Rodríguez Lavandeira</h1>
-            <p>Software Developer | Computer Engineer</p>
-            <p>Passionate about Augmented Reality, Virtual Reality, Compute Vision and Artificial Intelligence</p>
-            <nav class="main-nav">
-                <a href="#about">About Me</a>
-                <a href="#education">Education</a>
-                <a href="#experience">Experience</a>
-                <a href="#projects">Projects</a>
-                <a href="#skills">Skills</a>
-                <a href="#contact">Contact</a>
-            </nav>
-        </div>
-    </header>
+  <!-- ===== HEADER ===== -->
+  <header class="main-header">
+    <div class="container">
+      <img src="images/Foto_Orla_comprimida.jpg" alt="Profile photo" class="profile-photo" />
+      <h1>Javier Rodríguez Lavandeira</h1>
+      <p>Software Developer | Computer Engineer</p>
+      <p>Passionate about Augmented Reality, Virtual Reality, Computer Vision, and Artificial Intelligence</p>
 
-    <!-- About Me Section -->
-    <section id="about" class="section">
-        <div class="container">
-            <h2>About Me</h2>
-            <p>I am a computer engineer with experience in software development and a strong focus on emerging technologies like VR, AR, and Machine Learning. My goal is to create innovative solutions that combine creativity and technology. I am currently studying a postgraduate degree in Virtual and Augmented Reality at Goldsmiths University in London</p>
-        </div>
-    </section>
+      <nav class="main-nav">
+        <a href="#about">About Me</a>
+        <a href="#education">Education</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
 
-    <!-- Education Section -->
-    <section id="education" class="section">
-        <div class="container">
-            <h2>Education</h2>
-            <div class="education-item">
-                <div class="education-content">
-                    <h3>Bachelor's Degree in Computer Engineering</h3>
-                    <p><strong>Universidade da Coruña</strong></p>
-                    <p>Graduation Year: 2024</p>
-                    <p>Grades average based on Base 10 Scale: <strong>7.0675</strong></p>
-                    <p>Thesis grade: <strong>9.5</strong></p>
-                    <p>Relevant Coursework: Software Development, Databases, Software Design, Machine Learning, Artificial Intelligence, Algorithms, Operating Systems, Project Management.</p>
-                    <div class="education-logo">
-                        <img src="images/udc.png" alt="Universidade da Coruna Logo">
-                    </div> 
-                </div>
-            
-            </div>
-        </div>
-    </section>
+  <!-- ===== ABOUT ===== -->
+  <section id="about" class="section">
+    <div class="container">
+      <h2>About Me</h2>
+      <p>
+        I am a computer engineer with experience in software development and a strong focus on emerging technologies
+        like VR, AR, and Machine Learning. My goal is to create innovative solutions that combine creativity and
+        technology. I am currently studying a postgraduate degree in Virtual and Augmented Reality at Goldsmiths
+        University in London.
+      </p>
+    </div>
+  </section>
 
-    <!-- Experience Section -->
-    <section id="experience" class="section">
-        <div class="container">
-            <h2>Experience</h2>
-            <div class="experience-item">
-                <div class="experience-content">
-                    <h3>Software Engineer Internship</h3>
-                    <p><strong>Instituto Tecnológico de Galicia (ITG)</strong> | 02/2024 - 05/2024</p>
-                    <div class="task">
-                        <p>• Development of a custom voice assistant for android</p>
-                        <div class="task-description">
-                            <p>This task involved creating an Android app using Kotlin and integrating voice recognition and Text-to-Speech APIs to provide voice command functionalities. The result was a modularized and optimized library, making it easy to integrate into any project.</p>
-                        </div>
-                    </div>
-                    <div class="task">
-                        <p>• Augmented Reality application for Vuzix Blade 2</p>
-                        <div class="task-description">
-                            <p>Built in Java, this application displayed real-time location data and status information of tracked individuals in the real world using a custom canvas overlay and Bluetooth connectivity.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="experience-logo">
-                    <img src="images/itg.png" alt="ITG">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="section">
-        <div class="container">
-            <h2>Projects</h2>
-            <div class="project">
-                <h3>Bachelor's Thesis: Implementation of a virtual keyboard based on motion detection with EMG sensors</h3>
-                <p>This project focuses on developing a virtual keyboard based on the detection of finger and hand movements using electromyographic (EMG) sensors. These sensors capture the electrical signals generated by the forearm muscles when the fingers move, converting them into analog signals that are processed by a Support Vector Machine (SVM) classification algorithm. The SVM analyzes the signals to identify specific finger movements, enabling the activation of a key with a single finger or a combination of fingers.
-
-                    The system uses an ESP32 S2 mini microcontroller to transmit the processed signals to a computer, where the analysis takes place. The goal is to provide a more accessible and comfortable way of interacting with electronic devices, particularly for users with physical limitations who may have difficulty using conventional keyboards.
-                
-                    The main programming languages used in this project are Python, for all the signal processing and the computer application, and Arduino, for the acquisition of the signal with the microcontroller.</p>
-                <a href="https://www.linkedin.com/posts/javier-rodr%C3%ADguez-lavandeira-890284333_implementation-of-a-virtual-keybord-using-activity-7271819356676800512-JvgC?utm_source=share&utm_medium=member_desktop" target="_blank">View on Linkedin</a>
-            </div>
-            
-        </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section id="skills" class="section">
-        <div class="container">
-            <h2>Technical Skills</h2>
-            
-            <!-- Programming Languages -->
-            <div class="skills-category">
-                <h3>Programming Languages</h3>
-                <div class="skills-icons">
-                    <div class="skill">
-                        <img src="images/python-logo.png" alt="py" class="skill-icon">
-                        <p>Python</p>
-                    </div>
-                    <div class="skill">
-                        <img src="images/java-logo.png" alt="java" class="skill-icon">
-                        <p>Java</p>
-                    </div>
-                    
-                    <div class="skill">
-                        <img src="images/C-logo.png" alt="C" class="skill-icon">
-                        <p>C</p>
-                    </div>
-                    <div class="skill">
-                        <img src="images/C++-logo.png" alt="C++" class="skill-icon">
-                        <p>C++</p>
-                    </div>
-                    <div class="skill">
-                        <img src="images/c-sharp-logo.png" alt="C#" class="skill-icon">
-                        <p>C#</p>
-                    </div>
-                    
-                </div>
-            </div>
-    
-            <!-- Frameworks & Libraries -->
-            <div class="skills-category">
-                <h3>Frameworks & Libraries</h3>
-                <div class="skills-icons">
-                    <div class="skill">
-                        <img src="images/tensorflow-logo.png" alt="TensorFlow" class="skill-icon">
-                        <p>TensorFlow</p>
-                    </div>
-                    <div class="skill">
-                        <img src="images/nodejs-logo.png" alt="Node.js" class="skill-icon">
-                        <p>Node.js</p>
-                    </div>
-                    <div class="skill">
-                        <img src="images/opencv-logo.png" alt="Opencv" class="skill-icon">
-                        <p>Open cv</p>
-                    </div>
-                </div>
-            </div>
-    
-            <!-- Tools -->
-            <div class="skills-category">
-                <h3>Tools</h3>
-                <div class="skills-icons">
-                    <div class="skill">
-                        <img src="images/git-icon.png" alt="Git" class="skill-icon">
-                        <p>Git</p>
-                    </div>
-                    <div class="skill">
-                        <img src="images/postman-logo.png" alt="Postman" class="skill-icon">
-                        <p>Postman</p>
-                    </div>
-                    <div class="skill">
-                        <img src="images/linux-logo.png" alt="Linux" class="skill-icon">
-                        <p>Linux</p>
-                    </div>
-                </div>
-            </div>
-    
-            <!-- Other Skills -->
-            <div class="skills-category">
-                <h3>Other Skills</h3>
-                <div class="skills-icons">
-                    <div class="skill">
-                        <img src="images/unity-logo.png" alt="Unity" class="skill-icon">
-                        <p>Unity</p>
-                    </div>
-                    <div class="skill">
-                        <img src="images/arduino-logo.png" alt="Arduino" class="skill-icon">
-                        <p>Arduino</p>
-                    </div>
-                    <div class="skill">
-                        <img src="images/androidStudio-logo.png" alt="Android Studio" class="skill-icon">
-                        <p>Android Studio</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="section">
-        <div class="container">
-            <h2>Contact</h2>
+  <!-- ===== EDUCATION ===== -->
+  <section id="education" class="section">
+    <div class="container">
+      <h2>Education</h2>
+      <div class="items-grid">
+        <div class="card">
+          <div class="card-logo">
+            <img src="images/udc.png" alt="Universidade da Coruña" />
+          </div>
+          <div class="card-content">
+            <h3>Bachelor's Degree in Computer Engineering</h3>
+            <p><strong>Universidade da Coruña</strong> | 2020 – 2024</p>
+            <p>Grades average (base 10): <strong>7.07</strong> | Thesis grade: <strong>9.5</strong></p>
             <p>
-                <a href="mailto:javirlcy@gmail.com">
-                    <i class="fas fa-envelope"></i> javirlcy@gmail.com
-                </a>
+              Relevant Coursework: Software Development, Databases, Machine Learning, Artificial Intelligence, Project
+              Management.
             </p>
-            <p>
-                <a href="https://www.linkedin.com/in/javier-rodríguez-lavandeira-890284333" target="_blank">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-                <a href="https://github.com/Javier-Rodriguez-Lavandeira" target="_blank">
-                    <i class="fab fa-github"></i>
-                </a>
-            </p>
+          </div>
         </div>
-    </section>
 
-    <footer class="footer">
-        <div class="container">
-            <p>© 2025 Javier Rodríguez Lavandeira - All Rights Reserved</p>
+        <div class="card">
+          <div class="card-logo">
+            <img src="images/Goldsmiths.png" alt="Goldsmiths University" />
+          </div>
+          <div class="card-content">
+            <h3>Postgraduate in Virtual & Augmented Reality</h3>
+            <p><strong>Goldsmiths, University of London</strong> | 2025 – 2026</p>
+            <p>
+              Focused on immersive environments, AR interaction design, and the integration of creative coding with
+              extended reality technologies.
+            </p>
+          </div>
         </div>
-    </footer>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== EXPERIENCE ===== -->
+  <section id="experience" class="section">
+    <div class="container">
+      <h2>Experience</h2>
+      <div class="items-grid">
+        <div class="card">
+          <div class="card-logo">
+            <img src="images/itg.png" alt="Instituto Tecnológico de Galicia Logo" />
+          </div>
+          <div class="card-content">
+            <h3>Software Engineer Internship</h3>
+            <p><strong>Instituto Tecnológico de Galicia (ITG)</strong> | Feb 2024 – May 2024</p>
+            <ul>
+              <li>
+                Developed a <strong>custom voice assistant for Android</strong> using Kotlin with voice recognition and
+                TTS APIs. Modularized library for integration across projects.
+              </li>
+              <li>
+                Built an <strong>AR application for Vuzix Blade 2</strong> smart glasses in Java to display real-time
+                data using Bluetooth and Canvas overlays.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROJECTS ===== -->
+  <section id="projects" class="section">
+    <div class="container">
+      <h2>Projects</h2>
+      <div class="items-grid">
+        <div class="card">
+          <div class="card-content">
+            <h3>Bachelor's Thesis: Virtual Keyboard Using EMG Sensors</h3>
+            <p>
+              Developed a virtual keyboard based on motion detection through electromyographic (EMG) sensors. The system
+              detects finger movements and classifies them using an SVM algorithm to trigger corresponding keys. The
+              signals are processed via Python and captured with an ESP32 microcontroller.
+            </p>
+            <a
+              href="https://www.linkedin.com/posts/javier-rodr%C3%ADguez-lavandeira-890284333_implementation-of-a-virtual-keybord-using-activity-7271819356676800512-JvgC"
+              target="_blank"
+              >View on LinkedIn</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SKILLS ===== -->
+  <section id="skills" class="section">
+    <div class="container">
+      <h2>Technical Skills</h2>
+
+      <div class="skills-category">
+        <h3>Programming Languages</h3>
+        <div class="skills-grid">
+          <div class="skill">
+            <img src="images/python-logo.png" alt="Python" />
+            <p>Python</p>
+          </div>
+          <div class="skill">
+            <img src="images/java-logo.png" alt="Java" />
+            <p>Java</p>
+          </div>
+          <div class="skill">
+            <img src="images/C-logo.png" alt="C" />
+            <p>C</p>
+          </div>
+          <div class="skill">
+            <img src="images/C++-logo.png" alt="C++" />
+            <p>C++</p>
+          </div>
+          <div class="skill">
+            <img src="images/c-sharp-logo.png" alt="C#" />
+            <p>C#</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="skills-category">
+        <h3>Frameworks & Libraries</h3>
+        <div class="skills-grid">
+          <div class="skill">
+            <img src="images/tensorflow-logo.png" alt="TensorFlow" />
+            <p>TensorFlow</p>
+          </div>
+          <div class="skill">
+            <img src="images/nodejs-logo.png" alt="Node.js" />
+            <p>Node.js</p>
+          </div>
+          <div class="skill">
+            <img src="images/opencv-logo.png" alt="OpenCV" />
+            <p>OpenCV</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="skills-category">
+        <h3>Tools</h3>
+        <div class="skills-grid">
+          <div class="skill">
+            <img src="images/git-icon.png" alt="Git" />
+            <p>Git</p>
+          </div>
+          <div class="skill">
+            <img src="images/postman-logo.png" alt="Postman" />
+            <p>Postman</p>
+          </div>
+          <div class="skill">
+            <img src="images/linux-logo.png" alt="Linux" />
+            <p>Linux</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="skills-category">
+        <h3>Other Skills</h3>
+        <div class="skills-grid">
+          <div class="skill">
+            <img src="images/unity-logo.png" alt="Unity" />
+            <p>Unity</p>
+          </div>
+          <div class="skill">
+            <img src="images/arduino-logo.png" alt="Arduino" />
+            <p>Arduino</p>
+          </div>
+          <div class="skill">
+            <img src="images/androidStudio-logo.png" alt="Android Studio" />
+            <p>Android Studio</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="contact" class="section">
+    <div class="container">
+      <h2>Contact</h2>
+      <p>
+        <a href="mailto:javirlcy@gmail.com"><i class="fas fa-envelope"></i> javirlcy@gmail.com</a>
+      </p>
+      <p>
+        <a href="https://www.linkedin.com/in/javier-rodríguez-lavandeira-890284333" target="_blank"
+          ><i class="fab fa-linkedin"></i
+        ></a>
+        <a href="https://github.com/Javier-Rodriguez-Lavandeira" target="_blank"><i class="fab fa-github"></i></a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <p>© 2025 Javier Rodríguez Lavandeira - All Rights Reserved</p>
+    </div>
+  </footer>
 </body>
 </html>
-
-
-
-
