@@ -1,250 +1,860 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfolio - Javier Rodríguez Lavandeira</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <!-- Estilos -->
-  <link rel="stylesheet" href="styles.css" />
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111;
+    --border: #222;
+    --accent: #c8ff57;
+    --accent2: #ff6b35;
+    --text: #f0f0f0;
+    --muted: #666;
+    --card: #141414;
+  }
 
-  <!-- Iconos -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  html { scroll-behavior: smooth; }
 
-  <!-- Tipografía -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 999; opacity: .4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 3rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo {
+    font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em;
+    color: var(--accent);
+  }
+  .nav-links { display: flex; gap: 2.5rem; }
+  .nav-links a {
+    font-family: 'DM Mono', monospace; font-size: 0.75rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted); text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 3rem 5rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(200,255,87,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,255,87,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 0%, transparent 100%);
+  }
+  .hero-tag {
+    font-family: 'DM Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: .75rem;
+  }
+  .hero-tag::before { content: ''; display: block; width: 2rem; height: 1px; background: var(--accent); }
+  .hero-name {
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    font-weight: 800; line-height: .93; letter-spacing: -0.04em;
+    margin-bottom: 2rem;
+  }
+  .hero-name span { color: var(--accent); }
+  .hero-sub {
+    font-family: 'DM Mono', monospace; font-size: 0.85rem;
+    color: var(--muted); max-width: 40ch; line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+  /* placeholder text style */
+  .ph { color: var(--muted); font-style: italic; }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 1rem;
+    background: var(--accent); color: #000; font-weight: 700;
+    font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+    text-decoration: none; padding: .85rem 2rem;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200,255,87,0.3); }
+  .hero-scroll {
+    position: absolute; right: 3rem; bottom: 5rem;
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted);
+    writing-mode: vertical-rl;
+    display: flex; align-items: center; gap: .75rem;
+  }
+  .hero-scroll::after { content: ''; display: block; width: 1px; height: 3rem; background: var(--muted); }
+
+  /* ── SECTION HEADER ── */
+  section { padding: 6rem 3rem; border-top: 1px solid var(--border); }
+  .section-label {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800; letter-spacing: -0.03em; line-height: 1.05;
+    margin-bottom: 3rem;
+  }
+
+  /* ── PROJECTS ── */
+  #projects { background: var(--bg); }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5px;
+  }
+  .project-card {
+    background: var(--card); border: 1px solid var(--border);
+    padding: 2.5rem; position: relative; overflow: hidden;
+    transition: border-color .25s, transform .25s;
+    cursor: pointer;
+  }
+  .project-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .3s ease;
+  }
+  .project-card:hover::before { transform: scaleX(1); }
+  .project-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .project-number {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    color: var(--muted); margin-bottom: 2rem;
+    letter-spacing: 0.1em;
+  }
+  .project-title {
+    font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em;
+    margin-bottom: .75rem; line-height: 1.2;
+  }
+  .project-desc {
+    font-family: 'DM Mono', monospace; font-size: 0.78rem;
+    color: var(--muted); line-height: 1.65; margin-bottom: 2rem;
+  }
+  .project-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2rem; }
+  .tag {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: .3rem .7rem; border: 1px solid var(--border);
+    color: var(--muted); background: var(--surface);
+  }
+  .project-links { display: flex; gap: 1.5rem; }
+  .project-link {
+    font-family: 'DM Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text); text-decoration: none;
+    display: flex; align-items: center; gap: .4rem;
+    transition: color .2s;
+  }
+  .project-link:hover { color: var(--accent); }
+  .project-link svg { width: 12px; height: 12px; }
+
+  /* featured project */
+  .project-card.featured {
+    grid-column: 1 / -1;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+    align-items: center;
+    background: linear-gradient(135deg, #141414, #0f1a00);
+    border-color: rgba(200,255,87,0.2);
+    transition: opacity .3s ease;
+  }
+  .project-card.featured .project-title { font-size: 2rem; }
+  .featured-visual {
+    aspect-ratio: 16/9; background: var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace; font-size: 0.7rem;
+    color: var(--muted); text-align: center; padding: 2rem;
+    border: 1px dashed var(--border); letter-spacing: 0.05em;
+    overflow: hidden;
+    position: relative;
+  }
+  .featured-visual iframe {
+    width: 100%; height: 100%; border: none;
+  }
+  .featured-visual img {
+    width: 100%; height: 100%; object-fit: contain;
+  }
+  .featured-visual .carousel-container {
+    width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center;
+  }
+  .featured-visual .carousel-nav {
+    position: absolute; top: 50%; transform: translateY(-50%); background: rgba(200,255,87,0.3); color: var(--accent); 
+    border: 1px solid var(--accent); width: 2.5rem; height: 2.5rem; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all .2s; font-weight: bold; z-index: 10;
+  }
+  .featured-visual .carousel-nav:hover {
+    background: rgba(200,255,87,0.6);
+  }
+  .featured-visual .carousel-nav.prev { left: 1rem; }
+  .featured-visual .carousel-nav.next { right: 1rem; }
+  .featured-visual .carousel-dots {
+    position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; z-index: 10;
+  }
+  .featured-visual .carousel-dot {
+    width: 0.5rem; height: 0.5rem; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; transition: all .2s;
+  }
+  .featured-visual .carousel-dot.active {
+    background: var(--accent); transform: scale(1.3);
+  }
+  .featured-visual .carousel-label {
+    position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.6); color: var(--muted);
+    padding: 0.4rem 0.8rem; font-size: 0.65rem; border-radius: 0.25rem; z-index: 10;
+  }
+
+  /* ── EDUCATION ── */
+  #education { background: var(--surface); }
+  .edu-list { display: flex; flex-direction: column; gap: 0; }
+  .edu-item {
+    display: grid; grid-template-columns: 200px 1fr auto;
+    align-items: start; gap: 2rem;
+    padding: 2.5rem 0; border-bottom: 1px solid var(--border);
+    transition: padding-left .2s;
+  }
+  .edu-item:hover { padding-left: 1rem; }
+  .edu-year {
+    font-family: 'DM Mono', monospace; font-size: 0.75rem;
+    color: var(--accent); letter-spacing: 0.05em; padding-top: .2rem;
+  }
+  .edu-degree { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: .4rem; }
+  .edu-school { font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--muted); }
+  .edu-detail { font-size: 0.8rem; color: var(--muted); margin-top: .75rem; line-height: 1.6; }
+  .edu-badge {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: .35rem .8rem; border: 1px solid var(--border); color: var(--muted);
+    white-space: nowrap; align-self: start;
+  }
+
+  /* ── ABOUT / SKILLS ── */
+  #about {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6rem;
+    background: var(--bg);
+  }
+  .about-text { font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--muted); line-height: 1.8; }
+  .about-text p { margin-bottom: 1.25rem; }
+  .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .skill-group { }
+  .skill-group-title {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 1rem;
+  }
+  .skill-item {
+    font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--muted);
+    display: flex; align-items: center; gap: .5rem; margin-bottom: .5rem;
+  }
+  .skill-item::before { content: '—'; color: var(--border); }
+
+  /* ── CONTACT ── */
+  #contact {
+    background: var(--surface); border-top: 1px solid var(--border);
+    text-align: center; padding: 6rem 3rem;
+  }
+  .contact-big {
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    font-weight: 800; letter-spacing: -0.04em; line-height: 1;
+    margin-bottom: 2rem;
+  }
+  .contact-big span { color: var(--accent); }
+  .contact-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 2.5rem; }
+  .contact-link {
+    font-family: 'DM Mono', monospace; font-size: 0.75rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border);
+    padding-bottom: .25rem; transition: color .2s, border-color .2s;
+  }
+  .contact-link:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 1.5rem 3rem; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-tag { animation: fadeUp .6s ease both; }
+  .hero-name { animation: fadeUp .6s .1s ease both; }
+  .hero-sub { animation: fadeUp .6s .2s ease both; }
+  .hero-cta { animation: fadeUp .6s .3s ease both; }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.5rem; }
+    section, #hero { padding: 4rem 1.5rem; }
+    #hero { padding-bottom: 4rem; }
+    .project-card.featured { grid-template-columns: 1fr; }
+    .featured-visual { display: none; }
+    .edu-item { grid-template-columns: 1fr; gap: .75rem; }
+    #about { grid-template-columns: 1fr; gap: 3rem; }
+    .hero-scroll { display: none; }
+    footer { flex-direction: column; gap: .75rem; text-align: center; }
+  }
+</style>
 </head>
-
 <body>
-  <!-- ===== HEADER ===== -->
-  <header class="main-header">
-    <div class="container">
-      <img src="images/Foto_Orla_comprimida.jpg" alt="Profile photo" class="profile-photo" />
-      <h1>Javier Rodríguez Lavandeira</h1>
-      <p>Software Developer | Computer Engineer</p>
-      <p>Passionate about Augmented Reality, Virtual Reality, Computer Vision, and Artificial Intelligence</p>
 
-      <nav class="main-nav">
-        <a href="#about">About Me</a>
-        <a href="#education">Education</a>
-        <a href="#experience">Experience</a>
-        <a href="#projects">Projects</a>
-        <a href="#skills">Skills</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </div>
-  </header>
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">YN<span style="color:var(--muted)">.</span></div>
+  <div class="nav-links">
+    <a href="#projects">Projects</a>
+    <a href="#education">Education</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
 
-  <!-- ===== ABOUT ===== -->
-  <section id="about" class="section">
-    <div class="container">
-      <h2>About Me</h2>
-      <p>
-        I am a computer engineer with experience in software development and a strong focus on emerging technologies
-        like VR, AR, and Machine Learning. My goal is to create innovative solutions that combine creativity and
-        technology. I am currently studying a postgraduate degree in Virtual and Augmented Reality at Goldsmiths
-        University in London.
-      </p>
-    </div>
-  </section>
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-tag">Available for opportunities</div>
+  <h1 class="hero-name">Javier<br>Rodríguez Lavandeira<span>.</span></h1>
+  <p class="hero-sub ph">
+    <!-- Edit this: your role / tagline -->
+    V/AR master student & computer engineer.
+  </p>
+  <a href="#projects" class="hero-cta">View my work →</a>
+  <div class="hero-scroll">Scroll</div>
+</section>
 
-  <!-- ===== EDUCATION ===== -->
-  <section id="education" class="section">
-    <div class="container">
-      <h2>Education</h2>
-      <div class="items-grid">
-        <div class="card">
-          <div class="card-logo">
-            <img src="images/udc.png" alt="Universidade da Coruña" />
-          </div>
-          <div class="card-content">
-            <h3>Bachelor's Degree in Computer Engineering</h3>
-            <p><strong>Universidade da Coruña</strong> | 2020 – 2024</p>
-            <p>Grades average (base 10): <strong>7.07</strong> | Thesis grade: <strong>9.5</strong></p>
-            <p>
-              Relevant Coursework: Software Development, Databases, Machine Learning, Artificial Intelligence, Project
-              Management.
-            </p>
-          </div>
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-label">Selected work</p>
+  <h2 class="section-title">Projects</h2>
+
+  <div class="projects-grid">
+
+    <!-- FEATURED PROJECT -->
+    <div id="featured-project" class="project-card featured" style="cursor: pointer;">
+      <div>
+        <div class="project-number">001 — Featured</div>
+        <h3 class="project-title">Loading...</h3>
+        <p class="project-desc">Loading project data...</p>
+        <div class="project-tags">
+          <span class="tag">Loading</span>
         </div>
-
-        <div class="card">
-          <div class="card-logo">
-            <img src="images/Goldsmiths.png" alt="Goldsmiths University" />
-          </div>
-          <div class="card-content">
-            <h3>Postgraduate in Virtual & Augmented Reality</h3>
-            <p><strong>Goldsmiths, University of London</strong> | 2025 – 2026</p>
-            <p>
-              Focused on immersive environments, AR interaction design, and the integration of creative coding with
-              extended reality technologies.
-            </p>
-          </div>
+        <div class="project-links">
+          <a href="#" class="project-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Loading
+          </a>
         </div>
       </div>
+      <div class="featured-visual">Loading...</div>
     </div>
-  </section>
 
-  <!-- ===== EXPERIENCE ===== -->
-  <section id="experience" class="section">
-    <div class="container">
-      <h2>Experience</h2>
-      <div class="items-grid">
-        <div class="card">
-          <div class="card-logo">
-            <img src="images/itg.png" alt="Instituto Tecnológico de Galicia Logo" />
-          </div>
-          <div class="card-content">
-            <h3>Software Engineer Internship</h3>
-            <p><strong>Instituto Tecnológico de Galicia (ITG)</strong> | Feb 2024 – May 2024</p>
-            <ul>
-              <li>
-                Developed a <strong>custom voice assistant for Android</strong> using Kotlin with voice recognition and
-                TTS APIs. Modularized library for integration across projects.
-              </li>
-              <li>
-                Built an <strong>AR application for Vuzix Blade 2</strong> smart glasses in Java to display real-time
-                data using Bluetooth and Canvas overlays.
-              </li>
-            </ul>
-          </div>
-        </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <p class="section-label">Academic background</p>
+  <h2 class="section-title">Education</h2>
+
+  <div class="edu-list">
+
+    <div class="edu-item">
+      <div class="edu-year">2025 — 2026</div>
+      <div>
+        <div class="edu-degree ph">MSc in Virtual and Augmented Reality</div>
+        <div class="edu-school ph">Goldsmiths University of London</div>
+        <div class="edu-detail ph">Currently enrolled.</div>
+      </div>
+      <div class="edu-badge ph">Computing</div>
+    </div>
+
+    <div class="edu-item">
+      <div class="edu-year">2020 — 2025</div>
+      <div>
+        <div class="edu-degree ph">BSc in Computer Science</div>
+        <div class="edu-school ph">Universidade da Coruña</div>
+        <div class="edu-detail ph">Achieved a grade of 9.5 for my Thesis. Completed an ERASMUS exchange in the third year at UM (Univerza v Mariboru), Slovenia.</div>
+      </div>
+      <div class="edu-badge ph">Computing</div>
+    </div>
+
+    <div class="edu-item">
+      <div class="edu-year">2019</div>
+      <div>
+        <div class="edu-degree ph">Robotics education course (LEGO MINDSTORMS EV3),</div>
+        <div class="edu-school ph">LEGO Education Academy</div>
+        <div class="edu-detail ph">LEGO certification to teach robotics courses.</div>
+      </div>
+      <div class="edu-badge ph">Certification</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT + SKILLS -->
+<section id="about" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; background: var(--bg); padding: 6rem 3rem; border-top: 1px solid var(--border);">
+  <div>
+    <p class="section-label">A bit about me</p>
+    <h2 class="section-title">About</h2>
+    <div class="about-text">
+      <p class="ph">I am a software engineering student focused on virtual and augmented reality, driven by a fascination with technologies that blend the digital and physical worlds.</p>
+      <p class="ph">I got into this field after completing my bachelor’s degree, when my curiosity pushed me to explore it more deeply and start learning and researching about VR and AR.</p>
+      <p class="ph">I am especially interested in creating new mechanics and interactive experiences, experimenting with ideas and turning them into systems that people can actually engage with.</p>
+    </div>
+  </div>
+  <div>
+    <p class="section-label">Tools & technologies</p>
+    <h2 class="section-title">Skills</h2>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="skill-group-title">Frontend</div>
+        <div class="skill-item ph">Unity (C#)</div>
+        <div class="skill-item ph">Input handling</div>
+        <div class="skill-item ph">Basic UI/UX for interactive experiences</div>
+        <div class="skill-item ph">Basic 3D scene composition</div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Backend</div>
+        <div class="skill-item ph">C# (object-oriented programming)</div>
+        <div class="skill-item ph">Python, C, Java, HTML, CSS, </div>
+        <div class="skill-item ph">Basic API integration (e.g. maps, location services, LLM)</div>
+        
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Tools</div>
+        <div class="skill-item ph">Unity Editor</div>
+        <div class="skill-item ph">Maya</div>
+        <div class="skill-item ph">Blender</div>
+        <div class="skill-item ph">GitHub</div>
+        <div class="skill-item ph">Arduino</div>
+        <div class="skill-item ph">Android Studio</div>
+
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Other</div>
+        <div class="skill-item ph">Virtual & Augmented Reality development</div>
+        <div class="skill-item ph">Game mechanics & systems design</div>
+        <div class="skill-item ph">Simple electronic circuits</div>
+        <div class="skill-item ph">Motion Capture techniques</div>
+        <div class="skill-item ph">3D Modeling & Animation</div>
+        <div class="skill-item ph">3D Printing</div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ===== PROJECTS ===== -->
-  <section id="projects" class="section">
-    <div class="container">
-      <h2>Projects</h2>
-      <div class="items-grid">
-        <div class="card">
-          <div class="card-content">
-            <h3>Bachelor's Thesis: Virtual Keyboard Using EMG Sensors</h3>
-            <p>
-              Developed a virtual keyboard based on motion detection through electromyographic (EMG) sensors. The system
-              detects finger movements and classifies them using an SVM algorithm to trigger corresponding keys. The
-              signals are processed via Python and captured with an ESP32 microcontroller.
-            </p>
-            <a
-              href="https://www.linkedin.com/posts/javier-rodr%C3%ADguez-lavandeira-890284333_implementation-of-a-virtual-keybord-using-activity-7271819356676800512-JvgC"
-              target="_blank"
-              >View on LinkedIn</a
-            >
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label">Get in touch</p>
+  <div class="contact-big">Let's<br>work <span>together.</span></div>
+  <p style="font-family:'DM Mono',monospace; font-size:.85rem; color:var(--muted);" class="ph">javirlcy@gmail.com</p>
+  <div class="contact-links">
+    <a href="https://github.com/Javier-Rodriguez-Lavandeira" class="contact-link ph">GitHub</a>
+    <a href="https://www.linkedin.com/in/javier-rodríguez-lavandeira-890284333" class="contact-link ph">LinkedIn</a>
+    <a href="https://goldsmithscollege-my.sharepoint.com/:b:/g/personal/jrodr002_campus_goldsmiths_ac_uk/IQCv8lx2VtxOQ5aZY7PmaRAAAccml9yhP-r8q7QJPLCQoZs?e=R8dATO" class="contact-link ph">CV / Resume</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="ph">Javier Rodríguez Lavandeira — Portfolio</span>
+  <span style="color:var(--border)">©&nbsp;<span id="yr"></span></span>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // Consolidated project data - single source of truth
+  const projectsData = [
+    {
+      number: "001",
+      title: "Bachelor's Thesis: Virtual Keyboard Using EMG Sensors",
+      shortDesc: "Developed a virtual keyboard using EMG sensors and SVM classification.",
+      longDesc: "Developed a virtual keyboard based on motion detection through electromyographic (EMG) sensors. The system detects finger movements and classifies them using an SVM algorithm to trigger corresponding keys. The signals are processed via Python and captured with an ESP32 microcontroller.",
+      image: "img/project-001/Ventana_Calibracion.png",
+      videoId: "",
+      images: ["img/project-001/Ventana_Calibracion.png", "img/project-001/BacThesis.png"],
+      tags: ["Electronics", "Programming", "Python"],
+      links: [{"text": "Paper", "href": "https://www.linkedin.com/posts/javier-rodr%C3%ADguez-lavandeira-890284333_implementation-of-a-virtual-keybord-using-activity-7271819356676800512-JvgC/"}]
+    },
+    {
+      number: "002",
+      title: "The Garage VR",
+      shortDesc: "This Virtual Reality prototype explores a unique fusion of climbing and drawing, transforming creativity into a core gameplay mechanic.",
+      longDesc: "A Virtual Reality prototype that uniquely combines climbing mechanics with drawing as a core gameplay element. Players navigate through environments while creating visual art, merging physical exploration with creative expression.",
+      image: "",
+      videoId: "QcV9Jcn7vQY",
+      images: ["img/project-002/3.png", "img/project-002/4.png", "img/project-002/1.png", "img/project-002/2.png"],
+      tags: ["VR", "Unity"],
+      links: [{"text": "↗ Itch.io", "href": "https://javirola.itch.io/the-garage-vr-climbing-experience"}]
+    },
+    {
+      number: "003",
+      title: "Dream Lens",
+      shortDesc: "Host's favourrite award-winning project for Cambridge AIxXR hackathon.",
+      longDesc: "Dream Lens is an AI-powered VR documentary experience that explores the boundary between reality and imagination. Using hand tracking, players interact naturally with the world through two cameras: one realistic, which shows the environment as it is, and one imaginative, which transforms the same space through mood, atmosphere, and storytelling. Across two distinct environments — a warm savannah and a quiet snowy landscape — players record selected objects and turn observation into narrative.",
+      image: "",
+      videoId: "3MpFx-T6m8s",
+      images: ["img/project-003/Savannah.png", "img/project-003/RealCam.png", "img/project-003/DreamCam.png"],
+      tags: ["VR", "AI", "Unity", "Group Project(5)"],
+      links: [{"text": "↗ Itch.io", "href": "https://numi1217.itch.io/dream-lens"}]
+    },
+    {
+      number: "004",
+      title: "Face for Face",
+      shortDesc: "A puzzle game about swapping your body with masked mannequins. Made for Goldsmiths Global Game Jam.",
+      longDesc: "A creative puzzle game developed in under 48 hours for the Goldsmiths Global Game Jam. Players navigate body-swapping mechanics with masked mannequins to solve environmental puzzles and progress through increasingly complex challenges.",
+      image: "",
+      videoId: "LZFVdrko4mw",
+      images: ["img/project-004/FFF1.png", "img/project-004/FFF2.png", "img/project-004/FFF3.png"],
+      tags: ["Unity", "Under 48h", "Group Project(2)"],
+      links: [{"text": "↗ Itch.io", "href": "https://henryalbert.itch.io/face-for-face"}]
+    },
+    {
+      number: "005",
+      title: "Fencing VR",
+      shortDesc: "A virtual reality fencing training simulation.",
+      longDesc: "A virtual reality fencing training simulation. Players engage in training fencing scenarios to improve their technique, reaction time, and strategy.",
+      image: "",
+      videoId: "eYne4meaOyw",
+      images: ["img/project-005/Title.png", "img/project-005/fencing2.jpg", "img/project-005/fencing3.png"],
+      tags: ["Unity", "VR", "Group Project(4)"],
+      links: [{"text": "↗ Itch.io", "href": "https://javirola.itch.io/vr-fencing"}]
+    },
+    {
+      number: "006",
+      title: "SplitDrive",
+      shortDesc: "A 2 player driving game made for a custom controller.",
+      longDesc: "A 2 player driving game made for a custom controller where each player control one wheel of the vehicle.",
+      image: "",
+      videoId: "Iq2FFzWkTBE",
+      images: ["img/project-006/ControllerIMG2.jpeg", "img/project-006/Schematics.png", "img/project-006/SchematicsDrawn.jpeg"],
+      tags: ["Unity", "3D", "Custom Controller"],
+      links: [{"text": "↗ GitHub", "href": "https://github.com/Javier-Rodriguez-Lavandeira/SplitDrive"}]
+    },
+    {
+      number: "007",
+      title: "Non Plannar Projections",
+      shortDesc: "Implementation of non plannar projection techniques in Unity.",
+      longDesc: "This project investigates the implementation of non planar projection techniques in Unity, focusing on spherical, conical, and cylindrical projections. Each projection model was implemented using two different approaches: projection applied onto a 3D object (Object based) and projection performed without an intermediary object (Object independent).",
+      image: "",
+      videoId: "7DkoOHFSxGw",
+      images: ["img/project-007/SphericalProj.png", "img/project-007/SphereProj2.png", "img/project-007/FishProj.png"],
+      tags: ["Unity", "3D", "Mathematics", "Shaders", "Group Project(2)"],
+      links: [{"text": "↗ Itch.io", "href": "https://henryalbert.itch.io/non-planar-projections"}]
+    },
+    {
+      number: "008",
+      title: "Klym remake",
+      shortDesc: "A remake of the Klym game.",
+      longDesc: "A remake of the Klym game, implemented in Unity with improved graphics and gameplay mechanics. The project involved recreating the original game's mechanics while adding new features and enhancements.",
+      image: "",
+      videoId: "hDwkfFYiHjQ",
+      images: ["img/project-008/Klym1.png", "img/project-008/Klym2.png", "img/project-008/Klym3.png"],
+      tags: ["Unity", "3D", "Remake"],
+      links: [{"text": "↗ Itch.io", "href": "https://javirola.itch.io/klym-recreation"}, {"text": "↗ GitHub", "href": "https://github.com/Javier-Rodriguez-Lavandeira/Klym-Demake"}]
+    },
+    {
+      number: "009",
+      title: "L-System Visualizer",
+      shortDesc: "A visualization tool for generating and displaying L-Systems.",
+      longDesc: "An interactive visualization tool for generating and displaying L-Systems, implemented in Unity. The project allows users to create and manipulate L-System structures with various parameters and rendering options.",
+      image: "",
+      videoId: "obj4mHR97a8",
+      images: ["img/project-009/LS1.png", "img/project-009/LS2.png", "img/project-009/LS3.png"],
+      tags: ["Unity", "Mathematics"],
+      links: [{"text": "↗ Itch.io", "href": "https://javirola.itch.io/lsystems"}, {"text": "↗ GitHub", "href": "https://github.com/Javier-Rodriguez-Lavandeira/L-Systems"}]
+    },
+    {
+      number: "010",
+      title: "Synthetic Wild",
+      shortDesc: "VR experience where players animate animals in a virtual zoo using full-body motion capture and gesture recording.",
+      longDesc: "A VR-based interactive project that uses a Perception Neuron motion capture suit and headset tracking to retarget human movements onto animal characters in real time. Players can record custom gestures, generate animation clips dynamically, and apply them to different animals inside a virtual zoo environment. The system includes real-time retargeting, motion recording, and playback pipelines, enabling intuitive creation of animated behaviors through body movement.",
+      image: "",
+      videoId: "",
+      images: ["img/project-010/SW1.png", "img/project-010/SW2.png", "img/project-010/SW3.png"],
+      tags: ["Unity", "3D", "Motion Capture", "VR", "Group Project(3)"],
+      links: [{"text": "↗ GitHub", "href": "https://github.com/Javier-Rodriguez-Lavandeira/SyntheticWild"}]
+    }
+  ];
+
+  // Store original project data to preserve them
+  const projectDatabase = {};
+  const carouselState = {}; // Track current image index for each project
+  
+  // Initialize project database and generate HTML
+  function initializeProjectData() {
+    const projectsGrid = document.querySelector('.projects-grid');
+    
+    projectsData.forEach((project, index) => {
+      projectDatabase[project.number] = project;
+      carouselState[project.number] = { currentImageIndex: 0, showingVideo: !!project.videoId };
+      
+      if (index === 0) {
+        // Generate featured project HTML
+        const featured = document.getElementById('featured-project');
+        featured.dataset.number = project.number;
+        featured.dataset.title = project.title;
+        featured.dataset.shortDesc = project.shortDesc;
+        featured.dataset.longDesc = project.longDesc;
+        featured.dataset.image = project.image;
+        featured.dataset.videoId = project.videoId;
+        featured.dataset.images = JSON.stringify(project.images);
+        featured.dataset.tags = project.tags.join(',');
+        featured.dataset.links = JSON.stringify(project.links);
+        
+        // Update featured content
+        const contentDiv = featured.querySelector('div:first-child');
+        contentDiv.innerHTML = `
+          <div class="project-number">${project.number} — Featured</div>
+          <h3 class="project-title">${project.title}</h3>
+          <p class="project-desc">${project.longDesc}</p>
+          <div class="project-tags">
+            ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
           </div>
-        </div>
+          <div class="project-links">
+            ${project.links.map(link => `
+              <a href="${link.href}" class="project-link" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                ${link.text}
+              </a>
+            `).join('')}
+          </div>
+        `;
+        
+        // Update featured visual
+        const visualDiv = featured.querySelector('.featured-visual');
+        if (project.videoId) {
+          visualDiv.innerHTML = `
+            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;">
+              <iframe style="width:100%;height:100%;border:none;" src="https://www.youtube.com/embed/${project.videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              ${project.images.length > 0 ? `
+                <div style="position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:0.5rem;z-index:10;">
+                  <button class="carousel-tab" data-tab="video" style="background:var(--accent);color:#000;padding:0.4rem 1rem;border:none;cursor:pointer;font-weight:bold;font-size:0.7rem;">Video</button>
+                  <button class="carousel-tab" data-tab="images" style="background:transparent;color:var(--accent);padding:0.4rem 1rem;border:1px solid var(--accent);cursor:pointer;font-weight:bold;font-size:0.7rem;">Imágenes (${project.images.length})</button>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        } else if (project.images.length > 0) {
+          visualDiv.innerHTML = `
+            <div class="carousel-container">
+              <img src="${project.images[0]}" alt="Project image 1" style="width:100%;height:100%;object-fit:contain;">
+              ${project.images.length > 1 ? `
+                <button class="carousel-nav prev" onclick="changeImage('${project.number}', -1)">‹</button>
+                <button class="carousel-nav next" onclick="changeImage('${project.number}', 1)">›</button>
+                <div class="carousel-dots">
+                  ${project.images.map((_, i) => `<div class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="changeImage('${project.number}', ${i})"></div>`).join('')}
+                </div>
+              ` : ''}
+              <div class="carousel-label">1/${project.images.length}</div>
+            </div>
+          `;
+        } else {
+          visualDiv.innerHTML = `<img src="${project.image}" alt="${project.title}" style="width: 100%; height: 100%; object-fit: contain;">`;
+        }
+      } else {
+        // Generate project card HTML
+        const card = document.createElement('div');
+        card.className = 'project-card project-slot';
+        card.id = `project-${project.number}`;
+        card.dataset.number = project.number;
+        card.dataset.title = project.title;
+        card.dataset.shortDesc = project.shortDesc;
+        card.dataset.longDesc = project.longDesc;
+        card.dataset.image = project.image;
+        card.dataset.videoId = project.videoId;
+        card.dataset.images = JSON.stringify(project.images);
+        card.dataset.tags = project.tags.join(',');
+        card.dataset.links = JSON.stringify(project.links);
+        
+        card.innerHTML = `
+          <div class="project-number">${project.number}</div>
+          <h3 class="project-title">${project.title}</h3>
+          <p class="project-desc">${project.shortDesc}</p>
+          <div class="project-tags">
+            ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+          </div>
+          <div class="project-links">
+            ${project.links.map(link => `
+              <a href="${link.href}" class="project-link" target="_blank" rel="noopener noreferrer">${link.text}</a>
+            `).join('')}
+          </div>
+        `;
+        
+        projectsGrid.appendChild(card);
+      }
+    });
+  }
+  
+
+  // Function to update featured project display
+  function updateFeaturedDisplay(projectNumber) {
+    const featured = document.getElementById('featured-project');
+    const contentDiv = featured.querySelector('div:first-child');
+    const visualDiv = featured.querySelector('.featured-visual');
+    const projectData = projectDatabase[projectNumber];
+
+    // Update content
+    contentDiv.innerHTML = `
+      <div class="project-number">${projectData.number} — Featured</div>
+      <h3 class="project-title">${projectData.title}</h3>
+      <p class="project-desc">${projectData.longDesc}</p>
+      <div class="project-tags">
+        ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
       </div>
-    </div>
-  </section>
-
-  <!-- ===== SKILLS ===== -->
-  <section id="skills" class="section">
-    <div class="container">
-      <h2>Technical Skills</h2>
-
-      <div class="skills-category">
-        <h3>Programming Languages</h3>
-        <div class="skills-grid">
-          <div class="skill">
-            <img src="images/python-logo.png" alt="Python" />
-            <p>Python</p>
-          </div>
-          <div class="skill">
-            <img src="images/java-logo.png" alt="Java" />
-            <p>Java</p>
-          </div>
-          <div class="skill">
-            <img src="images/C-logo.png" alt="C" />
-            <p>C</p>
-          </div>
-          <div class="skill">
-            <img src="images/C++-logo.png" alt="C++" />
-            <p>C++</p>
-          </div>
-          <div class="skill">
-            <img src="images/c-sharp-logo.png" alt="C#" />
-            <p>C#</p>
-          </div>
-        </div>
+      <div class="project-links">
+        ${projectData.links.map(link => `
+          <a href="${link.href}" class="project-link" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            ${link.text}
+          </a>
+        `).join('')}
       </div>
+    `;
 
-      <div class="skills-category">
-        <h3>Frameworks & Libraries</h3>
-        <div class="skills-grid">
-          <div class="skill">
-            <img src="images/tensorflow-logo.png" alt="TensorFlow" />
-            <p>TensorFlow</p>
-          </div>
-          <div class="skill">
-            <img src="images/nodejs-logo.png" alt="Node.js" />
-            <p>Node.js</p>
-          </div>
-          <div class="skill">
-            <img src="images/opencv-logo.png" alt="OpenCV" />
-            <p>OpenCV</p>
-          </div>
+    // Update visual (image or video)
+    const state = carouselState[projectNumber];
+    if (state.showingVideo && projectData.videoId) {
+      // Show video
+      visualDiv.innerHTML = `
+        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;">
+          <iframe style="width:100%;height:100%;border:none;" src="https://www.youtube.com/embed/${projectData.videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          ${projectData.images.length > 0 ? `
+            <div style="position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:0.5rem;z-index:10;">
+              <button class="carousel-tab" data-tab="video" style="background:var(--accent);color:#000;padding:0.4rem 1rem;border:none;cursor:pointer;font-weight:bold;font-size:0.7rem;">Video</button>
+              <button class="carousel-tab" data-tab="images" style="background:transparent;color:var(--accent);padding:0.4rem 1rem;border:1px solid var(--accent);cursor:pointer;font-weight:bold;font-size:0.7rem;">Imágenes (${projectData.images.length})</button>
+            </div>
+          ` : ''}
         </div>
-      </div>
-
-      <div class="skills-category">
-        <h3>Tools</h3>
-        <div class="skills-grid">
-          <div class="skill">
-            <img src="images/git-icon.png" alt="Git" />
-            <p>Git</p>
-          </div>
-          <div class="skill">
-            <img src="images/postman-logo.png" alt="Postman" />
-            <p>Postman</p>
-          </div>
-          <div class="skill">
-            <img src="images/linux-logo.png" alt="Linux" />
-            <p>Linux</p>
-          </div>
+      `;
+    } else if (projectData.images.length > 0) {
+      // Show images carousel
+      const currentIndex = state.currentImageIndex;
+      visualDiv.innerHTML = `
+        <div class="carousel-container">
+          <img src="${projectData.images[currentIndex]}" alt="Project image ${currentIndex + 1}" style="width:100%;height:100%;object-fit:contain;">
+          ${projectData.images.length > 1 ? `
+            <button class="carousel-nav prev" onclick="changeImage('${projectNumber}', -1)">‹</button>
+            <button class="carousel-nav next" onclick="changeImage('${projectNumber}', 1)">›</button>
+            <div class="carousel-dots">
+              ${projectData.images.map((_, i) => `<div class="carousel-dot ${i === currentIndex ? 'active' : ''}" onclick="changeImage('${projectNumber}', ${i - currentIndex})"></div>`).join('')}
+            </div>
+          ` : ''}
+          <div class="carousel-label">${currentIndex + 1}/${projectData.images.length}</div>
+          ${projectData.videoId ? `
+            <div style="position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:0.5rem;z-index:10;">
+              <button class="carousel-tab" data-tab="video" style="background:transparent;color:var(--accent);padding:0.4rem 1rem;border:1px solid var(--accent);cursor:pointer;font-weight:bold;font-size:0.7rem;">Video</button>
+              <button class="carousel-tab" data-tab="images" style="background:var(--accent);color:#000;padding:0.4rem 1rem;border:none;cursor:pointer;font-weight:bold;font-size:0.7rem;">Imágenes (${projectData.images.length})</button>
+            </div>
+          ` : ''}
         </div>
+      `;
+    } else {
+      // Show static image
+      visualDiv.innerHTML = `<img src="${projectData.image}" alt="${projectData.title}" style="width: 100%; height: 100%; object-fit: contain;">`;
+    }
+
+    // Add smooth fade effect
+    featured.style.opacity = '0.8';
+    setTimeout(() => { featured.style.opacity = '1'; }, 50);
+  }
+
+  // Function to change image in carousel
+  function changeImage(projectNumber, direction) {
+    const projectData = projectDatabase[projectNumber];
+    const state = carouselState[projectNumber];
+    state.currentImageIndex = (state.currentImageIndex + direction + projectData.images.length) % projectData.images.length;
+    updateFeaturedDisplay(projectNumber);
+  }
+
+  // Function to switch between video and images
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('carousel-tab')) {
+      const tab = e.target.dataset.tab;
+      const featured = document.getElementById('featured-project');
+      const projectNumber = featured.dataset.number;
+      const state = carouselState[projectNumber];
+      
+      if (tab === 'video' && !state.showingVideo) {
+        state.showingVideo = true;
+        updateFeaturedDisplay(projectNumber);
+      } else if (tab === 'images' && state.showingVideo) {
+        state.showingVideo = false;
+        state.currentImageIndex = 0;
+        updateFeaturedDisplay(projectNumber);
+      }
+    }
+  });
+
+  // Function to update card display
+  function updateCardDisplay(card, projectNumber) {
+    const projectData = projectDatabase[projectNumber];
+
+    card.innerHTML = `
+      <div class="project-number">${projectData.number}</div>
+      <h3 class="project-title">${projectData.title}</h3>
+      <p class="project-desc">${projectData.shortDesc}</p>
+      <div class="project-tags">
+        ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
       </div>
-
-      <div class="skills-category">
-        <h3>Other Skills</h3>
-        <div class="skills-grid">
-          <div class="skill">
-            <img src="images/unity-logo.png" alt="Unity" />
-            <p>Unity</p>
-          </div>
-          <div class="skill">
-            <img src="images/arduino-logo.png" alt="Arduino" />
-            <p>Arduino</p>
-          </div>
-          <div class="skill">
-            <img src="images/androidStudio-logo.png" alt="Android Studio" />
-            <p>Android Studio</p>
-          </div>
-        </div>
+      <div class="project-links">
+        ${projectData.links.map(link => `
+          <a href="${link.href}" class="project-link" target="_blank" rel="noopener noreferrer">${link.text}</a>
+        `).join('')}
       </div>
-    </div>
-  </section>
+    `;
+  }
 
-  <!-- ===== CONTACT ===== -->
-  <section id="contact" class="section">
-    <div class="container">
-      <h2>Contact</h2>
-      <p>
-        <a href="mailto:javirlcy@gmail.com"><i class="fas fa-envelope"></i> javirlcy@gmail.com</a>
-      </p>
-      <p>
-        <a href="https://www.linkedin.com/in/javier-rodríguez-lavandeira-890284333" target="_blank"
-          ><i class="fab fa-linkedin"></i
-        ></a>
-        <a href="https://github.com/Javier-Rodriguez-Lavandeira" target="_blank"><i class="fab fa-github"></i></a>
-      </p>
-    </div>
-  </section>
+  // Initialize data on page load
+  initializeProjectData();
 
-  <!-- ===== FOOTER ===== -->
-  <footer class="footer">
-    <div class="container">
-      <p>© 2025 Javier Rodríguez Lavandeira - All Rights Reserved</p>
-    </div>
-  </footer>
+  // Add click handlers to project cards
+  document.querySelectorAll('.project-slot').forEach(card => {
+    card.addEventListener('click', function(e) {
+      // Don't trigger on link clicks
+      if (e.target.closest('a')) return;
+
+      const featured = document.getElementById('featured-project');
+      const currentFeaturedNumber = featured.dataset.number;
+      const clickedProjectNumber = this.dataset.number;
+
+      // Swap: display clicked project in featured, and featured project in card
+      updateFeaturedDisplay(clickedProjectNumber);
+      updateCardDisplay(this, currentFeaturedNumber);
+
+      // Reset carousel state for new featured project
+      carouselState[clickedProjectNumber] = { currentImageIndex: 0, showingVideo: !!projectDatabase[clickedProjectNumber].videoId };
+
+      // Update data attributes for consistency
+      featured.dataset.number = clickedProjectNumber;
+      this.dataset.number = currentFeaturedNumber;
+
+      // Scroll to featured project
+      featured.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  });
+</script>
 </body>
 </html>
