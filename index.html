@@ -226,6 +226,16 @@
     padding: 0.4rem 0.8rem; font-size: 0.65rem; border-radius: 0.25rem; z-index: 10;
   }
 
+  /* Image Modal */
+  .image-modal {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center;
+    z-index: 1000; cursor: pointer;
+  }
+  .image-modal img {
+    max-width: 90vw; max-height: 90vh; object-fit: contain;
+  }
+
   /* ── EDUCATION ── */
   #education { background: var(--surface); }
   .edu-list { display: flex; flex-direction: column; gap: 0; }
@@ -596,20 +606,36 @@
       images: ["img/project-010/SW1.png", "img/project-010/SW2.png", "img/project-010/SW3.png"],
       tags: ["Unity", "3D", "Motion Capture", "VR", "Group Project(3)"],
       links: [{"text": "↗ GitHub", "href": "https://github.com/Javier-Rodriguez-Lavandeira/SyntheticWild"}]
+    },
+    {
+      number: "011",
+      title: "TrackManiacs",
+      shortDesc: "Augmented reality \"Hot Wheels\" experience where players build, test, and destroy custom racetracks in the real world.",
+      longDesc: "TrackManiacs is an AR game that transforms real environments into interactive racetracks. Players can design dynamic tracks, use portals to create non-linear paths, and instantly remove elements with a destruction system. The project focuses on combining creativity, physics-based gameplay, and immersive AR interaction.",
+      image: "",
+      videoIds: ["F0eDUX-AvHI", "PrgmDvSdDU8"],
+      images: [],
+      tags: ["Unity", "3D", "AR", "Group Project(3)"],
+      links: []
     }
   ];
 
   // Store original project data to preserve them
   const projectDatabase = {};
-  const carouselState = {}; // Track current image index for each project
+  const carouselState = {}; // Track current image and video index for each project
   
   // Initialize project database and generate HTML
   function initializeProjectData() {
     const projectsGrid = document.querySelector('.projects-grid');
     
     projectsData.forEach((project, index) => {
+      // Normalize video data: convert videoId to videoIds array if needed
+      if (!project.videoIds) {
+        project.videoIds = project.videoId ? [project.videoId] : [];
+      }
+      
       projectDatabase[project.number] = project;
-      carouselState[project.number] = { currentImageIndex: 0, showingVideo: !!project.videoId };
+      carouselState[project.number] = { currentImageIndex: 0, currentVideoIndex: 0, showingVideo: project.videoIds.length > 0 };
       
       if (index === 0) {
         // Generate featured project HTML
@@ -619,7 +645,7 @@
         featured.dataset.shortDesc = project.shortDesc;
         featured.dataset.longDesc = project.longDesc;
         featured.dataset.image = project.image;
-        featured.dataset.videoId = project.videoId;
+        featured.dataset.videoIds = JSON.stringify(project.videoIds);
         featured.dataset.images = JSON.stringify(project.images);
         featured.dataset.tags = project.tags.join(',');
         featured.dataset.links = JSON.stringify(project.links);
@@ -645,13 +671,13 @@
         
         // Update featured visual
         const visualDiv = featured.querySelector('.featured-visual');
-        if (project.videoId) {
+        if (project.videoIds.length > 0) {
           visualDiv.innerHTML = `
             <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;">
-              <iframe style="width:100%;height:100%;border:none;" src="https://www.youtube.com/embed/${project.videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              <iframe style="width:100%;height:100%;border:none;" src="https://www.youtube.com/embed/${project.videoIds[0]}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
               ${project.images.length > 0 ? `
                 <div style="position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:0.5rem;z-index:10;">
-                  <button class="carousel-tab" data-tab="video" style="background:var(--accent);color:#000;padding:0.4rem 1rem;border:none;cursor:pointer;font-weight:bold;font-size:0.7rem;">Video</button>
+                  <button class="carousel-tab" data-tab="video" style="background:var(--accent);color:#000;padding:0.4rem 1rem;border:none;cursor:pointer;font-weight:bold;font-size:0.7rem;">${project.videoIds.length === 1 ? 'Video' : `Videos (${project.videoIds.length})`}</button>
                   <button class="carousel-tab" data-tab="images" style="background:transparent;color:var(--accent);padding:0.4rem 1rem;border:1px solid var(--accent);cursor:pointer;font-weight:bold;font-size:0.7rem;">Imágenes (${project.images.length})</button>
                 </div>
               ` : ''}
@@ -660,7 +686,7 @@
         } else if (project.images.length > 0) {
           visualDiv.innerHTML = `
             <div class="carousel-container">
-              <img src="${project.images[0]}" alt="Project image 1" style="width:100%;height:100%;object-fit:contain;">
+              <img src="${project.images[0]}" alt="Project image 1" style="width:100%;height:100%;object-fit:contain;" onclick="openImageModal('${project.images[0]}')">
               ${project.images.length > 1 ? `
                 <button class="carousel-nav prev" onclick="changeImage('${project.number}', -1)">‹</button>
                 <button class="carousel-nav next" onclick="changeImage('${project.number}', 1)">›</button>
@@ -672,7 +698,7 @@
             </div>
           `;
         } else {
-          visualDiv.innerHTML = `<img src="${project.image}" alt="${project.title}" style="width: 100%; height: 100%; object-fit: contain;">`;
+          visualDiv.innerHTML = `<img src="${project.image}" alt="${project.title}" style="width: 100%; height: 100%; object-fit: contain;" onclick="openImageModal('${project.image}')">`;
         }
       } else {
         // Generate project card HTML
@@ -736,25 +762,47 @@
 
     // Update visual (image or video)
     const state = carouselState[projectNumber];
-    if (state.showingVideo && projectData.videoId) {
-      // Show video
-      visualDiv.innerHTML = `
-        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;">
-          <iframe style="width:100%;height:100%;border:none;" src="https://www.youtube.com/embed/${projectData.videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          ${projectData.images.length > 0 ? `
-            <div style="position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:0.5rem;z-index:10;">
-              <button class="carousel-tab" data-tab="video" style="background:var(--accent);color:#000;padding:0.4rem 1rem;border:none;cursor:pointer;font-weight:bold;font-size:0.7rem;">Video</button>
-              <button class="carousel-tab" data-tab="images" style="background:transparent;color:var(--accent);padding:0.4rem 1rem;border:1px solid var(--accent);cursor:pointer;font-weight:bold;font-size:0.7rem;">Imágenes (${projectData.images.length})</button>
+    if (state.showingVideo && projectData.videoIds.length > 0) {
+      if (projectData.videoIds.length === 1) {
+        // Single video
+        visualDiv.innerHTML = `
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;">
+            <iframe style="width:100%;height:100%;border:none;" src="https://www.youtube.com/embed/${projectData.videoIds[0]}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            ${projectData.images.length > 0 ? `
+              <div style="position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:0.5rem;z-index:10;">
+                <button class="carousel-tab" data-tab="video" style="background:var(--accent);color:#000;padding:0.4rem 1rem;border:none;cursor:pointer;font-weight:bold;font-size:0.7rem;">${projectData.videoIds.length === 1 ? 'Video' : `Videos (${projectData.videoIds.length})`}</button>
+                <button class="carousel-tab" data-tab="images" style="background:transparent;color:var(--accent);padding:0.4rem 1rem;border:1px solid var(--accent);cursor:pointer;font-weight:bold;font-size:0.7rem;">Imágenes (${projectData.images.length})</button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      } else {
+        // Multiple videos carousel
+        const currentIndex = state.currentVideoIndex;
+        visualDiv.innerHTML = `
+          <div class="carousel-container">
+            <iframe style="width:100%;height:100%;border:none;" src="https://www.youtube.com/embed/${projectData.videoIds[currentIndex]}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <button class="carousel-nav prev" onclick="changeVideo('${projectNumber}', -1)">‹</button>
+            <button class="carousel-nav next" onclick="changeVideo('${projectNumber}', 1)">›</button>
+            <div class="carousel-dots">
+              ${projectData.videoIds.map((_, i) => `<div class="carousel-dot ${i === currentIndex ? 'active' : ''}" onclick="changeVideo('${projectNumber}', ${i - currentIndex})"></div>`).join('')}
             </div>
-          ` : ''}
-        </div>
-      `;
+            <div class="carousel-label">${currentIndex + 1}/${projectData.videoIds.length}</div>
+            ${projectData.images.length > 0 ? `
+              <div style="position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:0.5rem;z-index:10;">
+                <button class="carousel-tab" data-tab="video" style="background:var(--accent);color:#000;padding:0.4rem 1rem;border:none;cursor:pointer;font-weight:bold;font-size:0.7rem;">Videos (${projectData.videoIds.length})</button>
+                <button class="carousel-tab" data-tab="images" style="background:transparent;color:var(--accent);padding:0.4rem 1rem;border:1px solid var(--accent);cursor:pointer;font-weight:bold;font-size:0.7rem;">Imágenes (${projectData.images.length})</button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }
     } else if (projectData.images.length > 0) {
       // Show images carousel
       const currentIndex = state.currentImageIndex;
       visualDiv.innerHTML = `
         <div class="carousel-container">
-          <img src="${projectData.images[currentIndex]}" alt="Project image ${currentIndex + 1}" style="width:100%;height:100%;object-fit:contain;">
+          <img src="${projectData.images[currentIndex]}" alt="Project image ${currentIndex + 1}" style="width:100%;height:100%;object-fit:contain;" onclick="openImageModal('${projectData.images[currentIndex]}')">
           ${projectData.images.length > 1 ? `
             <button class="carousel-nav prev" onclick="changeImage('${projectNumber}', -1)">‹</button>
             <button class="carousel-nav next" onclick="changeImage('${projectNumber}', 1)">›</button>
@@ -763,9 +811,9 @@
             </div>
           ` : ''}
           <div class="carousel-label">${currentIndex + 1}/${projectData.images.length}</div>
-          ${projectData.videoId ? `
+          ${projectData.videoIds && projectData.videoIds.length > 0 ? `
             <div style="position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:0.5rem;z-index:10;">
-              <button class="carousel-tab" data-tab="video" style="background:transparent;color:var(--accent);padding:0.4rem 1rem;border:1px solid var(--accent);cursor:pointer;font-weight:bold;font-size:0.7rem;">Video</button>
+              <button class="carousel-tab" data-tab="video" style="background:transparent;color:var(--accent);padding:0.4rem 1rem;border:1px solid var(--accent);cursor:pointer;font-weight:bold;font-size:0.7rem;">${projectData.videoIds.length === 1 ? 'Video' : `Videos (${projectData.videoIds.length})`}</button>
               <button class="carousel-tab" data-tab="images" style="background:var(--accent);color:#000;padding:0.4rem 1rem;border:none;cursor:pointer;font-weight:bold;font-size:0.7rem;">Imágenes (${projectData.images.length})</button>
             </div>
           ` : ''}
@@ -773,7 +821,7 @@
       `;
     } else {
       // Show static image
-      visualDiv.innerHTML = `<img src="${projectData.image}" alt="${projectData.title}" style="width: 100%; height: 100%; object-fit: contain;">`;
+      visualDiv.innerHTML = `<img src="${projectData.image}" alt="${projectData.title}" style="width: 100%; height: 100%; object-fit: contain;" onclick="openImageModal('${projectData.image}')">`;
     }
 
     // Add smooth fade effect
@@ -787,6 +835,23 @@
     const state = carouselState[projectNumber];
     state.currentImageIndex = (state.currentImageIndex + direction + projectData.images.length) % projectData.images.length;
     updateFeaturedDisplay(projectNumber);
+  }
+
+  // Function to change video in carousel
+  function changeVideo(projectNumber, direction) {
+    const projectData = projectDatabase[projectNumber];
+    const state = carouselState[projectNumber];
+    state.currentVideoIndex = (state.currentVideoIndex + direction + projectData.videoIds.length) % projectData.videoIds.length;
+    updateFeaturedDisplay(projectNumber);
+  }
+
+  // Function to open image modal
+  function openImageModal(src) {
+    const modal = document.createElement('div');
+    modal.className = 'image-modal';
+    modal.innerHTML = `<img src="${src}" alt="Full size image">`;
+    modal.onclick = function() { document.body.removeChild(modal); };
+    document.body.appendChild(modal);
   }
 
   // Function to switch between video and images
@@ -845,7 +910,7 @@
       updateCardDisplay(this, currentFeaturedNumber);
 
       // Reset carousel state for new featured project
-      carouselState[clickedProjectNumber] = { currentImageIndex: 0, showingVideo: !!projectDatabase[clickedProjectNumber].videoId };
+      carouselState[clickedProjectNumber] = { currentImageIndex: 0, currentVideoIndex: 0, showingVideo: projectDatabase[clickedProjectNumber].videoIds.length > 0 };
 
       // Update data attributes for consistency
       featured.dataset.number = clickedProjectNumber;
