@@ -476,7 +476,7 @@
       <div>
         <div class="edu-degree ph">MSc in Virtual and Augmented Reality</div>
         <div class="edu-school ph">Goldsmiths University of London</div>
-        <div class="edu-detail ph">Currently enrolled.</div>
+        <div class="edu-detail ph">Waiting for grade</div>
       </div>
       <div class="edu-badge ph">Computing</div>
     </div>
@@ -719,7 +719,7 @@
       projectDatabase[project.number] = project;
       carouselState[project.number] = { currentImageIndex: 0, currentVideoIndex: 0, showingVideo: project.videoIds.length > 0 };
       
-      if (index === 0) {
+      if (index === 1) {
         // Generate featured project HTML
         const featured = document.getElementById('featured-project');
         featured.dataset.number = project.number;
