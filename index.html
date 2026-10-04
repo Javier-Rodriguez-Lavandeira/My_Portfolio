@@ -407,6 +407,56 @@
     .hero-scroll { display: none; }
     footer { flex-direction: column; gap: .75rem; text-align: center; }
   }
+
+  /* ── PROJECT DETAIL POPUP ── */
+.project-card.featured::after {
+  content: 'Click for details →';
+  position: absolute; right: 1.5rem; bottom: 1rem;
+  font-family: 'DM Mono', monospace; font-size: .65rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--accent);
+  opacity: .7; pointer-events: none;
+}
+.image-modal { z-index: 1100; }
+.image-modal iframe { width: min(90vw, 160vh * .9); aspect-ratio: 16/9; border: none; }
+
+.pm-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem 1.5rem; animation: pmFade .25s ease;
+}
+@keyframes pmFade { from { opacity: 0; } to { opacity: 1; } }
+.pm-panel {
+  width: min(900px, 100%); max-height: 90vh; overflow-y: auto;
+  background: var(--card); border: 1px solid rgba(200,255,87,.25);
+  padding: 3rem; animation: fadeUp .35s ease;
+  scrollbar-width: thin; scrollbar-color: var(--accent) var(--card);
+}
+.pm-close {
+  position: fixed; top: 1.25rem; right: 1.5rem; z-index: 1001;
+  width: 2.5rem; height: 2.5rem; background: transparent; color: var(--accent);
+  border: 1px solid var(--accent); font-size: 1.1rem; cursor: pointer;
+}
+.pm-close:hover { background: var(--accent); color: #000; }
+.pm-panel .project-title { font-size: clamp(1.6rem, 4vw, 2.4rem); }
+.pm-panel .project-desc { font-size: .85rem; line-height: 1.8; }
+.pm-heading {
+  font-family: 'DM Mono', monospace; font-size: .65rem; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--accent);
+  margin: 2.5rem 0 1rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+}
+.pm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+.pm-media {
+  position: relative; aspect-ratio: 16/9; background: #000; overflow: hidden;
+  border: 1px solid var(--border); cursor: zoom-in; transition: border-color .2s, transform .2s;
+}
+.pm-media:hover { border-color: var(--accent); transform: translateY(-2px); }
+.pm-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pm-media.video::after {
+  content: '▶'; position: absolute; inset: 0; display: flex; align-items: center;
+  justify-content: center; font-size: 2rem; color: var(--accent); background: rgba(0,0,0,.35);
+}
+@media (max-width: 768px) { .pm-panel { padding: 2rem 1.25rem; max-height: 85vh; } }
 </style>
 </head>
 <body>
@@ -582,19 +632,25 @@
     {
       number: "001",
       title: "Bachelor's Thesis: Virtual Keyboard Using EMG Sensors",
-      shortDesc: "Developed a virtual keyboard using EMG sensors and SVM classification.",
-      longDesc: "Developed a virtual keyboard based on motion detection through electromyographic (EMG) sensors. The system detects finger movements and classifies them using an SVM algorithm to trigger corresponding keys. The signals are processed via Python and captured with an ESP32 microcontroller.",
+      shortDesc: "A virtual keyboard controlled through finger movements detected with EMG sensors and classified using machine learning.",
+      longDesc: "A virtual keyboard system that uses electromyographic signals to detect finger movements and translate them into keyboard input.",
+      details: [
+      "This project explored an alternative input method for human-computer interaction using electromyography (EMG). The goal was to create a virtual keyboard controlled through subtle finger movements, reducing the need for conventional physical input devices.",
+      "EMG signals were collected from sensors connected to an ESP32 and processed in Python. Finger movements were classified using a Support Vector Machine (SVM), with the resulting classifications mapped to corresponding virtual keyboard keys. A calibration interface was also developed to make the system adaptable to the user.",
+      "I designed and implemented the software pipeline, including signal acquisition, processing, classification and interaction. The project required working across embedded hardware, machine learning and software development, giving me experience integrating physical sensors with an interactive application."
+      ],
       image: "img/project-001/Ventana_Calibracion.png",
       videoId: "",
-      images: ["img/project-001/Ventana_Calibracion.png", "img/project-001/BacThesis.png"],
+      images: ["img/project-001/Ventana_Calibracion.png", "img/project-001/BacThesis.png", "img/project-001/ESP32.jpeg", "img/project-001/electronica.png", "img/project-001/colocacionElectrodos.png", "img/project-001/Segmentacion.png", "img/project-001/Resultados.png"],
       tags: ["Electronics", "Programming", "Python"],
       links: [{"text": "Paper", "href": "https://www.linkedin.com/posts/javier-rodr%C3%ADguez-lavandeira-890284333_implementation-of-a-virtual-keybord-using-activity-7271819356676800512-JvgC/"}]
     },
     {
       number: "002",
       title: "The Garage VR",
-      shortDesc: "This Virtual Reality prototype explores a unique fusion of climbing and drawing, transforming creativity into a core gameplay mechanic.",
-      longDesc: "A Virtual Reality prototype that uniquely combines climbing mechanics with drawing as a core gameplay element. Players navigate through environments while creating visual art, merging physical exploration with creative expression.",
+      shortDesc: "A VR climbing experience where drawing becomes part of the physical environment and gameplay.",
+      longDesc: "A Virtual Reality climbing puzzle game that combines drawing and physical movement, requiring players to create their own climbing holds and use limited resources wisely to reach the top.",
+      details: [ "The Garage VR combines climbing with drawing to create a resource-management puzzle. Players use a virtual painting tablet to draw their own climbing holds directly onto the environment, which are then transformed into physical objects that can be climbed.", "Ink is limited, so players must decide where to spend their resources and how much to draw. Larger holds are easier to grab but consume more ink, while smaller holds require greater precision and more careful route planning. The challenge comes from finding an efficient path to the top rather than simply creating as many holds as possible.", "I developed the VR climbing and interaction systems in Unity, combining physical climbing, drawing-based object creation, resource management and stamina mechanics. The project explores how VR can turn drawing into a physical gameplay mechanic where planning and decision-making directly shape the environment." ],
       image: "",
       videoId: "QcV9Jcn7vQY",
       images: ["img/project-002/3.png", "img/project-002/4.png", "img/project-002/1.png", "img/project-002/2.png"],
@@ -604,8 +660,14 @@
     {
       number: "003",
       title: "Dream Lens",
-      shortDesc: "Host's favourrite award-winning project for Cambridge AIxXR hackathon.",
-      longDesc: "Dream Lens is an AI-powered VR documentary experience that explores the boundary between reality and imagination. Using hand tracking, players interact naturally with the world through two cameras: one realistic, which shows the environment as it is, and one imaginative, which transforms the same space through mood, atmosphere, and storytelling. Across two distinct environments — a warm savannah and a quiet snowy landscape — players record selected objects and turn observation into narrative.",
+      shortDesc: "An award-winning AI-powered VR documentary experience exploring the boundary between observation and imagination.",
+      longDesc: "An AI-powered VR documentary experience where players use two cameras to record the world from realistic and imaginative perspectives.",
+      details: [
+      "Dream Lens is an experimental VR documentary experience created during the Cambridge AIxXR hackathon. The project explores how AI and immersive media can change the way people document and interpret the world around them.",
+      "Using hand tracking, players interact naturally with two virtual cameras. The Real Camera captures the environment as it is, while the Dream Camera transforms the same space into a more imaginative and atmospheric interpretation. Players explore two environments, a warm savannah and a snowy landscape, selecting objects and turning their observations into a visual narrative.",
+      "I worked as part of a five-person team on the Unity VR implementation and interaction systems. The project challenged us to combine AI-driven ideas with intuitive spatial interaction within a very limited development time. It was also selected as the host's favourite project at the Cambridge AIxXR hackathon, reinforcing the value of combining a clear concept with technically engaging XR interactions."
+      ],
+
       image: "",
       videoId: "3MpFx-T6m8s",
       images: ["img/project-003/Savannah.png", "img/project-003/RealCam.png", "img/project-003/DreamCam.png"],
@@ -615,8 +677,13 @@
     {
       number: "004",
       title: "Face for Face",
-      shortDesc: "A puzzle game about swapping your body with masked mannequins. Made for Goldsmiths Global Game Jam.",
-      longDesc: "A creative puzzle game developed in under 48 hours for the Goldsmiths Global Game Jam. Players navigate body-swapping mechanics with masked mannequins to solve environmental puzzles and progress through increasingly complex challenges.",
+      shortDesc: "A puzzle game about swapping bodies with masked mannequins, developed in under 48 hours.",
+      longDesc: "A fast-paced game development project created for the Goldsmiths Global Game Jam, built around body-swapping puzzle mechanics.",
+      details: [
+      "Face for Face is a puzzle game developed during the Goldsmiths Global Game Jam. The central idea is based around swapping the player's body with masked mannequins, turning the character itself into a gameplay mechanic.",
+      "Players use the body-swapping mechanic to navigate the environment and solve puzzles. Different bodies provide access to different areas or interactions, requiring the player to understand how the characters and environment can be combined to progress.",
+      "I worked as part of a two-person team during the 48-hour development period. The biggest challenge was deciding what to prioritise under severe time constraints while still delivering a coherent playable experience. The project strengthened my ability to prototype mechanics quickly and make technical decisions based on gameplay value rather than implementation perfection."
+      ],
       image: "",
       videoId: "LZFVdrko4mw",
       images: ["img/project-004/FFF1.png", "img/project-004/FFF2.png", "img/project-004/FFF3.png"],
@@ -626,19 +693,29 @@
     {
       number: "005",
       title: "Fencing VR",
-      shortDesc: "A virtual reality fencing training simulation.",
+      shortDesc: "A VR fencing training simulation designed around technique and reaction time.",
       longDesc: "A virtual reality fencing training simulation. Players engage in training fencing scenarios to improve their technique, reaction time, and strategy.",
+      details: [
+      "Fencing VR is a Virtual Reality training simulation designed to explore how immersive environments can support sports training. The project places the player in a virtual fencing environment where they can practise techniques against simulated targets.",
+      "The experience focuses on spatial interaction and timing, requiring players to react to attacks and use appropriate fencing movements. VR controllers provide direct interaction with the weapon, allowing the training scenarios to be built around physical movement rather than traditional game controls.",
+      "I worked as part of a four-person team to develop the Unity VR experience. The project gave me experience designing interactions around a physical activity and highlighted the challenges of translating real-world movements and expectations into a virtual environment."
+      ],
       image: "",
       videoId: "eYne4meaOyw",
-      images: ["img/project-005/Title.png", "img/project-005/fencing2.jpg", "img/project-005/fencing3.png"],
+      images: ["img/project-005/Title.png", "img/project-005/fencing2.jpg", "img/project-005/fencing3.png", "img/project-005/fencing4.png"],
       tags: ["Unity", "VR", "Group Project(4)"],
       links: [{"text": "↗ Itch.io", "href": "https://javirola.itch.io/vr-fencing"}]
     },
     {
       number: "006",
       title: "SplitDrive",
-      shortDesc: "A 2 player driving game made for a custom controller.",
-      longDesc: "A 2 player driving game made for a custom controller where each player control one wheel of the vehicle.",
+      shortDesc: "A two-player driving game controlled through a custom physical controller.",
+      longDesc: "A two-player driving game where each player controls one side of the vehicle through a custom-built physical controller.",
+      details: [
+      "SplitDrive is a two-player driving game designed around an unusual physical interaction: instead of controlling a vehicle individually, each player is responsible for one of its wheels. The game was created to explore how a custom controller can fundamentally change the mechanics of a conventional genre.",
+      "The custom controller divides steering and movement between two physical inputs, requiring both players to coordinate their actions to control the vehicle. This turns cooperation into the core mechanic rather than simply adding multiplayer to an existing driving system.",
+      "I developed the Unity game as well as the custom hardware and worked on the integration between both of them. The project involved designing the controller, working with electronics and translating physical input into game behaviour. It taught me how hardware constraints can be used deliberately to create more interesting interaction mechanics."
+      ],
       image: "",
       videoId: "Iq2FFzWkTBE",
       images: ["img/project-006/ControllerIMG2.jpeg", "img/project-006/Schematics.png", "img/project-006/SchematicsDrawn.jpeg"],
@@ -649,7 +726,12 @@
       number: "007",
       title: "Non Plannar Projections",
       shortDesc: "Implementation of non plannar projection techniques in Unity.",
-      longDesc: "This project investigates the implementation of non planar projection techniques in Unity, focusing on spherical, conical, and cylindrical projections. Each projection model was implemented using two different approaches: projection applied onto a 3D object (Object based) and projection performed without an intermediary object (Object independent).",
+      longDesc: "A technical Unity project investigating different approaches to rendering content onto non-planar surfaces. The project explores spherical, fisheye, and other projection techniques, demonstrating how to map textures and visuals onto curved geometries.",
+      details: [
+      "This project investigates how conventional planar projection techniques can be adapted to curved surfaces. The goal was to understand how spherical, cylindrical and conical projections can be implemented and visualised within a real-time 3D environment.",
+      "Each projection was implemented using two approaches. The first projects content onto an intermediary 3D object, while the second performs the projection independently of an object. This allowed us to compare different mathematical and rendering approaches and observe how they behave across different geometries.",
+      "I worked as part of a two-person team, implementing the projection techniques in Unity and experimenting with the underlying mathematics and shaders. The project strengthened my understanding of coordinate spaces, projection mathematics and GPU-based rendering, while also providing a foundation for working with more advanced visualisation techniques."
+      ],
       image: "",
       videoId: "7DkoOHFSxGw",
       images: ["img/project-007/SphericalProj.png", "img/project-007/SphereProj2.png", "img/project-007/FishProj.png"],
@@ -658,9 +740,14 @@
     },
     {
       number: "008",
-      title: "Klym remake",
-      shortDesc: "A remake of the Klym game.",
-      longDesc: "A remake of the Klym game, implemented in Unity with improved graphics and gameplay mechanics. The project involved recreating the original game's mechanics while adding new features and enhancements.",
+      title: "Klym Remake",
+      shortDesc: "A Unity remake of Klym, recreating its core mechanics while expanding the original experience.",
+      longDesc: "A Unity-based remake of Klym with improved graphics and gameplay mechanics. The project involved recreating the original game's mechanics while adding new features and enhancements.",
+      details: [
+      "Klym Remake is a recreation of the Klym game developed to explore the process of analysing an existing game and rebuilding its mechanics from scratch. Rather than simply reproducing its appearance, the project focused on understanding the systems that make the original experience work.",
+      "The project involved recreating the game's core gameplay loop, player interactions and environment within Unity. Additional improvements and features were introduced while keeping the original game's identity and mechanics as the reference point.",
+      "I implemented the remake in Unity, working through the process of breaking an existing game into smaller systems and rebuilding them independently. This was particularly useful for improving my understanding of gameplay architecture, iteration and the relationship between mechanics and level design."
+      ],
       image: "",
       videoId: "hDwkfFYiHjQ",
       images: ["img/project-008/Klym1.png", "img/project-008/Klym2.png", "img/project-008/Klym3.png"],
@@ -670,8 +757,13 @@
     {
       number: "009",
       title: "L-System Visualizer",
-      shortDesc: "A visualization tool for generating and displaying L-Systems.",
-      longDesc: "An interactive visualization tool for generating and displaying L-Systems, implemented in Unity. The project allows users to create and manipulate L-System structures with various parameters and rendering options.",
+      shortDesc: "An interactive Unity tool for generating and visualising procedural L-Systems.",
+      longDesc: "An interactive visualisation tool that turns L-System rules into procedural structures in real time.",
+      details: [
+      "The L-System Visualizer explores procedural generation through Lindenmayer systems, a mathematical formalism commonly used to describe recursive structures such as plants and other organic forms. The project was designed as an interactive way to experiment with how simple rules can generate complex structures.",
+      "Users can modify the parameters and rules used to generate an L-System and immediately observe the resulting structure. Unity is responsible for interpreting the generated sequences and converting them into a visual 3D representation.",
+      "I implemented the system in Unity, focusing on the underlying rule-processing logic as well as the visualisation pipeline. The project helped me develop a stronger understanding of recursion, procedural generation and how mathematical systems can be translated into interactive visual experiences."
+      ],
       image: "",
       videoId: "obj4mHR97a8",
       images: ["img/project-009/LS1.png", "img/project-009/LS2.png", "img/project-009/LS3.png"],
@@ -681,8 +773,13 @@
     {
       number: "010",
       title: "Synthetic Wild",
-      shortDesc: "VR experience where players animate animals in a virtual zoo using full-body motion capture and gesture recording.",
-      longDesc: "A VR-based interactive project that uses a Perception Neuron motion capture suit and headset tracking to retarget human movements onto animal characters in real time. Players can record custom gestures, generate animation clips dynamically, and apply them to different animals inside a virtual zoo environment. The system includes real-time retargeting, motion recording, and playback pipelines, enabling intuitive creation of animated behaviors through body movement.",
+      shortDesc: "A VR experience using full-body motion capture to create and record animal animations through human movement.",
+      longDesc: "A VR motion-capture experience where players animate virtual animals from the zoo using their own body movements.",
+      details: [
+      "Synthetic Wild explores how full-body motion capture can be used as an intuitive interface for creating animation. The project places the player inside a virtual zoo where their movements can be transferred onto different animal characters.",
+      "A Perception Neuron motion-capture suit and headset tracking are used to capture the player's movements. These movements are retargeted onto animal rigs in real time, while the system also allows users to record gestures and generate animation clips that can later be played back by the animals.",
+      "I worked as part of a three-person team on the Unity implementation of the motion-capture and animation pipeline. The main technical challenge was translating human movement onto characters with very different proportions and skeletons. The project gave me practical experience with motion capture, animation retargeting and designing interfaces around full-body movement."
+      ],
       image: "",
       videoId: "",
       images: ["img/project-010/SW1.png", "img/project-010/SW2.png", "img/project-010/SW3.png"],
@@ -692,15 +789,35 @@
     {
       number: "011",
       title: "TrackManiacs",
-      shortDesc: "Augmented reality \"Hot Wheels\" experience where players build, test, and destroy custom racetracks in the real world.",
-      longDesc: "TrackManiacs is an AR game that transforms real environments into interactive racetracks. Players can design dynamic tracks, use portals to create non-linear paths, and instantly remove elements with a destruction system. The project focuses on combining creativity, physics-based gameplay, and immersive AR interaction.",
+      shortDesc: "An AR Hot Wheels-inspired experience where players build, test and destroy racetracks in the real world.",
+      longDesc: "An augmented reality game that turns real environments into interactive racetracks through track building, portals and physics-based destruction.",
+      details: [
+      "TrackManiacs is an Augmented Reality experience inspired by Hot Wheels-style track building. The project gives players the ability to construct racetracks directly within their physical environment, turning the real world into part of the game level.",
+      "Players can place and connect track elements, create non-linear routes using portals and experiment with physics-based interactions.",
+      "I worked as part of a four-person team on the Unity AR implementation. The project required combining spatial placement, 3D physics and mobile AR interaction while keeping the experience understandable for the player. It gave me experience designing interactions where virtual objects need to feel naturally connected to the user's physical surroundings."
+      ],
       image: "",
       videoIds: ["F0eDUX-AvHI", "PrgmDvSdDU8"],
       images: [],
       tags: ["Unity", "3D", "AR", "Group Project(4)"],
       links: []
+    },
+    {
+      number: "012",
+      title: "Modeling & Animation Projects",
+      shortDesc: "A collection of 3D modeling and animation projects showcasing various techniques and tools.",
+      longDesc: "A portfolio of 3D modeling and animation projects that demonstrate my hability in modelling and animating 3D assets.",
+      details: [
+      "These projects showcase a range of 3D modeling and animations that can be used as game assets.",
+      ],
+      image: "",
+      videoIds: ["M66fq2Y4GaA", "YSWMenUrtIo"],
+      images: ["img/project-012/PaintedGun.jpg", "img/project-012/FirstMatsGun.jpg", "img/project-012/WagonWithColor.jpg", "img/project-012/WagonWithColor2.jpg", "img/project-012/PaintedRobot.jpg", "img/project-012/KirbyWithColor.png", "img/project-012/ArmsAndLegCtrls.png"],
+      tags: ["3D Modeling", "Animation", "Blender", "Maya"],
+      links: []
     }
   ];
+
 
   // Store original project data to preserve them
   const projectDatabase = {};
@@ -1002,6 +1119,87 @@
       featured.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
   });
+
+  // ── PROJECT DETAIL POPUP ──
+function openVideoModal(id) {
+  const m = document.createElement('div');
+  m.className = 'image-modal';
+  m.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  m.onclick = () => m.remove();
+  document.body.appendChild(m);
+}
+
+function closeProjectModal() {
+  document.querySelector('.pm-overlay')?.remove();
+  document.querySelector('.pm-close')?.remove();
+  document.body.style.overflow = '';
+}
+
+function openProjectModal(num) {
+  const p = projectDatabase[num];
+  if (!p) return;
+  closeProjectModal();
+
+  // Optional: add a `details: ["paragraph 1", "paragraph 2"]` array to any project for a longer text
+  const paragraphs = p.details || [p.longDesc];
+  const images = p.images.length ? p.images : (p.image ? [p.image] : []);
+
+  const overlay = document.createElement('div');
+  overlay.className = 'pm-overlay';
+  overlay.innerHTML = `
+    <div class="pm-panel">
+      <div class="project-number">${p.number}</div>
+      <h3 class="project-title">${p.title}</h3>
+      <div class="project-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+      ${paragraphs.map(t => `<p class="project-desc">${t}</p>`).join('')}
+      <div class="project-links">
+        ${p.links.map(l => `<a href="${l.href}" class="project-link" target="_blank" rel="noopener noreferrer">${l.text}</a>`).join('')}
+      </div>
+      ${p.videoIds.length ? `
+        <div class="pm-heading">Video${p.videoIds.length > 1 ? 's' : ''}</div>
+        <div class="pm-grid">
+          ${p.videoIds.map(id => `
+            <div class="pm-media video" data-video="${id}">
+              <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg" alt="Video thumbnail" loading="lazy">
+            </div>`).join('')}
+        </div>` : ''}
+      ${images.length ? `
+        <div class="pm-heading">Images</div>
+        <div class="pm-grid">
+          ${images.map(src => `<div class="pm-media" data-img="${src}"><img src="${src}" alt="${p.title}" loading="lazy"></div>`).join('')}
+        </div>` : ''}
+    </div>`;
+
+  // click outside the panel closes it
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) return closeProjectModal();
+    const media = e.target.closest('.pm-media');
+    if (!media) return;
+    if (media.dataset.video) openVideoModal(media.dataset.video);
+    else openImageModal(media.dataset.img);
+  });
+
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'pm-close';
+  closeBtn.textContent = '✕';
+  closeBtn.onclick = closeProjectModal;
+
+  document.body.append(overlay, closeBtn);
+  document.body.style.overflow = 'hidden';
+}
+
+// open when the featured project is clicked (ignoring its own controls)
+document.getElementById('featured-project').addEventListener('click', e => {
+  if (e.target.closest('a, button, .carousel-dot, img, iframe')) return;
+  openProjectModal(e.currentTarget.dataset.number);
+});
+
+// Esc closes the lightbox first, then the popup
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  const lightbox = document.querySelector('.image-modal');
+  if (lightbox) lightbox.remove(); else closeProjectModal();
+});
 </script>
 </body>
 </html>
