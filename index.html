@@ -127,10 +127,14 @@
   .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
-    gap: 1.5px;
+    gap: 1.25rem;
   }
   .projects-grid.flagship-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  #archive-grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 1rem;
   }
   .project-card {
     background: var(--card); border: 1px solid var(--border);
@@ -139,6 +143,8 @@
     cursor: pointer;
     display: flex; flex-direction: column;
   }
+  .project-slot { padding: 0; }
+  .card-body { display: flex; flex-direction: column; flex: 1; }
   .project-card.flagship-card {
     background: linear-gradient(135deg, #161616, #101707);
     border-color: rgba(200, 255, 87, 0.18);
@@ -148,6 +154,7 @@
     background: linear-gradient(90deg, var(--accent), transparent);
     transform: scaleX(0); transform-origin: left;
     transition: transform .3s ease;
+    z-index: 5;
   }
   .project-card:hover::before,
   .project-card.is-active::before { transform: scaleX(1); }
@@ -155,6 +162,79 @@
   .project-card.is-active {
     border-color: var(--accent);
     box-shadow: inset 0 0 0 1px rgba(200, 255, 87, 0.35);
+  }
+
+  /* ── CARD THUMBNAILS & HYBRID TIER (OPTION C) ── */
+  .card-media {
+    position: relative;
+    overflow: hidden;
+    background: #0c0c0c;
+    aspect-ratio: 16 / 9;
+  }
+  .card-media img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform .55s cubic-bezier(0.22, 1, 0.36, 1), opacity .45s ease;
+  }
+  .card-img-hover {
+    position: absolute; inset: 0;
+    opacity: 0;
+  }
+  .project-card:hover .card-img-primary { transform: scale(1.04); }
+  .project-card:hover .card-img-hover {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+  .media-top-badges {
+    position: absolute; top: 0.75rem; left: 0.75rem; z-index: 3;
+    display: flex; gap: 0.4rem; flex-wrap: wrap;
+  }
+  .media-badges {
+    position: absolute; bottom: 0.75rem; right: 0.75rem; z-index: 3;
+    display: flex; gap: 0.4rem; flex-wrap: wrap;
+  }
+  .media-pill {
+    font-family: 'DM Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.25rem 0.55rem;
+    background: rgba(10, 10, 10, 0.78);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: var(--text);
+  }
+  .media-pill.has-video {
+    border-color: rgba(200, 255, 87, 0.45);
+    color: var(--accent);
+  }
+  .flagship-card .card-media {
+    border-bottom: 1px solid rgba(200, 255, 87, 0.16);
+  }
+  .flagship-card .card-media::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, rgba(10, 10, 10, 0.05) 45%, rgba(16, 23, 7, 0.88) 100%);
+  }
+  .flagship-card .card-body {
+    padding: 1.75rem 2rem 2rem;
+  }
+  #archive-grid .card-media {
+    max-height: 180px;
+    border-bottom: 1px solid var(--border);
+  }
+  #archive-grid .card-media::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, transparent 50%, rgba(20, 20, 20, 0.85) 100%);
+  }
+  #archive-grid .card-body {
+    padding: 1.35rem 1.5rem 1.5rem;
+  }
+  #archive-grid .project-title {
+    font-size: 1.15rem; margin-bottom: 0.55rem;
+  }
+  #archive-grid .project-desc {
+    font-size: 0.74rem; margin-bottom: 1.15rem;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  #archive-grid .project-tags {
+    margin-bottom: 1.15rem;
   }
   .project-card-top {
     display: flex; align-items: center; justify-content: space-between;
@@ -839,28 +919,50 @@
   function createProjectCard(project, isFlagship) {
     const card = document.createElement('div');
     const isActive = project.number === currentFeaturedNumber;
+    const { primary, hover } = getProjectCoverMedia(project);
+    const photoCount = project.images?.length || (project.image ? 1 : 0);
+    const hasVideo = project.videoIds.length > 0;
+
     card.className = `project-card project-slot${isFlagship ? ' flagship-card' : ''}${isActive ? ' is-active' : ''}`;
     card.id = `project-${project.number}`;
     card.dataset.number = project.number;
 
     card.innerHTML = `
-      <div class="project-card-top">
-        <div class="project-number">${project.number}</div>
-        <div class="project-card-badges">
-          ${isFlagship ? '<span class="flagship-badge">Flagship</span>' : ''}
-          ${isActive ? '<span class="viewing-badge">In Spotlight</span>' : ''}
+      ${primary ? `
+        <div class="card-media">
+          <img class="card-img-primary" src="${primary}" alt="${project.title}" loading="lazy" decoding="async">
+          ${hover ? `<img class="card-img-hover" src="${hover}" alt="${project.title} preview" loading="lazy" decoding="async">` : ''}
+          <div class="media-top-badges">
+            ${isFlagship ? '<span class="flagship-badge">Flagship</span>' : ''}
+            ${isActive ? '<span class="viewing-badge">In Spotlight</span>' : ''}
+          </div>
+          <div class="media-badges">
+            ${hasVideo ? `<span class="media-pill has-video">▶ Video${project.videoIds.length > 1 ? ` ×${project.videoIds.length}` : ''}</span>` : ''}
+            ${photoCount > 1 ? `<span class="media-pill">${photoCount} Photos</span>` : ''}
+          </div>
         </div>
-      </div>
-      <h3 class="project-title">${project.title}</h3>
-      <p class="project-desc">${project.shortDesc}</p>
-      <div class="project-tags">
-        ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-      </div>
-      <div class="project-links">
-        ${project.links.map(link => `
-          <a href="${link.href}" class="project-link" target="_blank" rel="noopener noreferrer">${link.text}</a>
-        `).join('')}
-        <button type="button" class="project-link project-details-btn" data-details="${project.number}">Details →</button>
+      ` : ''}
+      <div class="card-body">
+        <div class="project-card-top">
+          <div class="project-number">${project.number}</div>
+          ${!primary ? `
+            <div class="project-card-badges">
+              ${isFlagship ? '<span class="flagship-badge">Flagship</span>' : ''}
+              ${isActive ? '<span class="viewing-badge">In Spotlight</span>' : ''}
+            </div>
+          ` : ''}
+        </div>
+        <h3 class="project-title">${project.title}</h3>
+        <p class="project-desc">${project.shortDesc}</p>
+        <div class="project-tags">
+          ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+        </div>
+        <div class="project-links">
+          ${project.links.map(link => `
+            <a href="${link.href}" class="project-link" target="_blank" rel="noopener noreferrer">${link.text}</a>
+          `).join('')}
+          <button type="button" class="project-link project-details-btn" data-details="${project.number}">Details →</button>
+        </div>
       </div>
     `;
 

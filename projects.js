@@ -40,6 +40,8 @@ const PROJECTS_DATA = [
     flags: ["Hardware", "Solo"],
     flagship: true,
     flagshipOrder: 4,
+    coverImage: "img/project-001/ESP32.jpeg",
+    hoverImage: "img/project-001/Ventana_Calibracion.png",
     links: [
       { text: "Paper", href: "https://www.linkedin.com/posts/javier-rodr%C3%ADguez-lavandeira-890284333_implementation-of-a-virtual-keybord-using-activity-7271819356676800512-JvgC/" }
     ]
@@ -66,6 +68,8 @@ const PROJECTS_DATA = [
     flags: ["VR", "Unity", "Solo"],
     flagship: true,
     flagshipOrder: 2,
+    coverImage: "img/project-002/4.png",
+    hoverImage: "img/project-002/3.png",
     links: [
       { text: "↗ Itch.io", href: "https://javirola.itch.io/the-garage-vr-climbing-experience" }
     ]
@@ -91,6 +95,8 @@ const PROJECTS_DATA = [
     flags: ["VR", "Unity", "AI", "Team", "Hackathon / Jam"],
     flagship: true,
     flagshipOrder: 3,
+    coverImage: "img/project-003/Savannah.png",
+    hoverImage: "img/project-003/DreamCam.png",
     links: [
       { text: "↗ Itch.io", href: "https://numi1217.itch.io/dream-lens" }
     ]
@@ -372,6 +378,8 @@ const PROJECTS_DATA = [
     flags: ["VR", "Unity", "Multiplayer", "Solo"],
     flagship: true,
     flagshipOrder: 1,
+    coverImage: "img/project-013/1.png",
+    hoverImage: "img/project-013/2.png",
     links: [
       { text: "↗ Instagram", href: "https://www.instagram.com/routesettervr/" }
     ]
@@ -454,12 +462,36 @@ function getFlagCounts(projects, flags = FILTER_FLAGS) {
   return counts;
 }
 
+/**
+ * Resolves the primary cover image and optional hover-crossfade image for a project card.
+ */
+function getProjectCoverMedia(project) {
+  if (!project) return { primary: '', hover: '' };
+
+  const imgs = Array.isArray(project.images) && project.images.length
+    ? project.images
+    : (project.image ? [project.image] : []);
+  const vids = Array.isArray(project.videoIds) && project.videoIds.length
+    ? project.videoIds
+    : (project.videoId ? [project.videoId] : []);
+
+  const primary = project.coverImage
+    || imgs[0]
+    || (vids[0] ? `https://img.youtube.com/vi/${vids[0]}/hqdefault.jpg` : '');
+  const hover = project.hoverImage
+    || imgs.find(src => src !== primary)
+    || '';
+
+  return { primary, hover };
+}
+
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     PROJECTS_DATA,
     FILTER_FLAGS,
     getProjectFlags,
     filterProjects,
-    getFlagCounts
+    getFlagCounts,
+    getProjectCoverMedia
   };
 }
