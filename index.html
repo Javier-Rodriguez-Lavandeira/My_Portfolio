@@ -126,14 +126,22 @@
   #projects { background: var(--bg); }
   .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
     gap: 1.5px;
+  }
+  .projects-grid.flagship-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .project-card {
     background: var(--card); border: 1px solid var(--border);
     padding: 2.5rem; position: relative; overflow: hidden;
     transition: border-color .25s, transform .25s;
     cursor: pointer;
+    display: flex; flex-direction: column;
+  }
+  .project-card.flagship-card {
+    background: linear-gradient(135deg, #161616, #101707);
+    border-color: rgba(200, 255, 87, 0.18);
   }
   .project-card::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
@@ -141,12 +149,38 @@
     transform: scaleX(0); transform-origin: left;
     transition: transform .3s ease;
   }
-  .project-card:hover::before { transform: scaleX(1); }
+  .project-card:hover::before,
+  .project-card.is-active::before { transform: scaleX(1); }
   .project-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .project-card.is-active {
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 1px rgba(200, 255, 87, 0.35);
+  }
+  .project-card-top {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 0.75rem; margin-bottom: 1.75rem;
+  }
+  .project-card-badges { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
   .project-number {
     font-family: 'DM Mono', monospace; font-size: 0.65rem;
-    color: var(--muted); margin-bottom: 2rem;
+    color: var(--muted);
     letter-spacing: 0.1em;
+  }
+  .project-card.featured .project-number,
+  .pm-panel .project-number {
+    margin-bottom: 2rem;
+  }
+  .flagship-badge {
+    font-family: 'DM Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); border: 1px solid rgba(200, 255, 87, 0.4);
+    padding: 0.2rem 0.55rem; background: rgba(200, 255, 87, 0.06);
+  }
+  .viewing-badge {
+    font-family: 'DM Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: #000; background: var(--accent);
+    padding: 0.2rem 0.55rem; font-weight: 700;
   }
   .project-title {
     font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em;
@@ -163,7 +197,10 @@
     padding: .3rem .7rem; border: 1px solid var(--border);
     color: var(--muted); background: var(--surface);
   }
-  .project-links { display: flex; gap: 1.5rem; }
+  .project-links {
+    display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap;
+    margin-top: auto;
+  }
   .project-link {
     font-family: 'DM Mono', monospace; font-size: 0.7rem;
     letter-spacing: 0.1em; text-transform: uppercase;
@@ -173,15 +210,99 @@
   }
   .project-link:hover { color: var(--accent); }
   .project-link svg { width: 12px; height: 12px; }
+  .project-details-btn {
+    background: none; border: none; padding: 0; cursor: pointer;
+    color: var(--accent); margin-left: auto;
+  }
+  .project-details-btn:hover { color: var(--text); }
+
+  /* ── FILTER BAR & PROJECT TIERS ── */
+  .filter-bar {
+    margin-bottom: 3rem;
+    padding: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .filter-header {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .filter-label {
+    font-family: 'DM Mono', monospace; font-size: 0.68rem;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent);
+  }
+  .filter-meta {
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .filter-status {
+    font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted);
+  }
+  .filter-reset {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--accent); padding: 0.3rem 0.7rem;
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer;
+    transition: border-color .2s, background .2s, color .2s;
+  }
+  .filter-reset:hover { border-color: var(--accent); background: var(--accent); color: #000; }
+  .filter-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .filter-pill {
+    font-family: 'DM Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.45rem 0.85rem; border: 1px solid var(--border);
+    background: var(--card); color: var(--muted); cursor: pointer;
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    transition: border-color .2s, color .2s, background .2s;
+  }
+  .filter-pill:hover { border-color: var(--accent); color: var(--text); }
+  .filter-pill.active {
+    background: var(--accent); color: #000;
+    border-color: var(--accent); font-weight: 700;
+  }
+  .filter-count { font-size: 0.6rem; color: var(--muted); }
+  .filter-pill.active .filter-count { color: rgba(0, 0, 0, 0.65); }
+
+  .projects-tier { margin-bottom: 3.5rem; }
+  .projects-tier:last-of-type { margin-bottom: 0; }
+  .tier-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 1rem; flex-wrap: wrap;
+    padding-bottom: 0.9rem; margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .tier-label {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent);
+    display: inline-flex; align-items: center; gap: 0.6rem;
+  }
+  .tier-label::before {
+    content: ''; width: 6px; height: 6px; background: var(--accent); display: inline-block;
+  }
+  .tier-label.tier-label-archive { color: var(--muted); }
+  .tier-label.tier-label-archive::before { background: var(--muted); }
+  .tier-count {
+    font-family: 'DM Mono', monospace; font-size: 0.68rem;
+    color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase;
+  }
+
+  .projects-empty {
+    padding: 3.5rem 2rem; text-align: center;
+    background: var(--card); border: 1px dashed var(--border);
+  }
+  .projects-empty-text {
+    font-family: 'DM Mono', monospace; font-size: 0.85rem;
+    color: var(--muted); margin-bottom: 1.5rem;
+  }
 
   /* featured project */
   .project-card.featured {
-    grid-column: 1 / -1;
     display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
     align-items: center;
     background: linear-gradient(135deg, #141414, #0f1a00);
     border-color: rgba(200,255,87,0.2);
     transition: opacity .3s ease;
+    margin-bottom: 3rem;
   }
   .project-card.featured .project-title { font-size: 2rem; }
   .featured-visual {
@@ -388,6 +509,7 @@
     section, #hero { padding: 4rem 1.5rem; }
     #hero { padding-bottom: 4rem; text-align: center; }
     .hero-name { font-size: clamp(2rem, 6vw, 4rem); }
+    .projects-grid.flagship-grid { grid-template-columns: 1fr; }
     .project-card.featured { grid-template-columns: 1fr; }
     .featured-visual { max-height: auto; aspect-ratio: auto; display: flex; flex-direction: column; align-items: center; }
     .edu-item { grid-template-columns: 1fr; gap: .75rem; }
@@ -490,27 +612,54 @@
   <p class="section-label">Selected work</p>
   <h2 class="section-title">Projects</h2>
 
-  <div class="projects-grid">
-
-    <!-- FEATURED PROJECT -->
-    <div id="featured-project" class="project-card featured" style="cursor: pointer;">
-      <div>
-        <div class="project-number">001 — Featured</div>
-        <h3 class="project-title">Loading...</h3>
-        <p class="project-desc">Loading project data...</p>
-        <div class="project-tags">
-          <span class="tag">Loading</span>
-        </div>
-        <div class="project-links">
-          <a href="#" class="project-link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Loading
-          </a>
-        </div>
+  <!-- FEATURED SPOTLIGHT -->
+  <div id="featured-project" class="project-card featured" style="cursor: pointer;">
+    <div>
+      <div class="project-number">013 — Featured</div>
+      <h3 class="project-title">Loading...</h3>
+      <p class="project-desc">Loading project data...</p>
+      <div class="project-tags">
+        <span class="tag">Loading</span>
       </div>
-      <div class="featured-visual">Loading...</div>
+      <div class="project-links"></div>
     </div>
+    <div class="featured-visual">Loading...</div>
+  </div>
 
+  <!-- FLAG FILTER BAR -->
+  <div class="filter-bar" role="region" aria-label="Filter projects by flag">
+    <div class="filter-header">
+      <span class="filter-label">Filter by flag</span>
+      <div class="filter-meta">
+        <span id="filter-status" class="filter-status">Showing all projects</span>
+        <button id="filter-reset" class="filter-reset" type="button" hidden>Clear filters</button>
+      </div>
+    </div>
+    <div id="filter-pills" class="filter-pills"></div>
+  </div>
+
+  <!-- TIER 1: TOP 4 FLAGSHIP PROJECTS -->
+  <div id="flagship-tier" class="projects-tier">
+    <div class="tier-header">
+      <span class="tier-label">Top 4 Flagship Projects</span>
+      <span id="flagship-count" class="tier-count"></span>
+    </div>
+    <div id="flagship-grid" class="projects-grid flagship-grid"></div>
+  </div>
+
+  <!-- TIER 2: MORE PROJECTS & COURSEWORK -->
+  <div id="archive-tier" class="projects-tier">
+    <div class="tier-header">
+      <span class="tier-label tier-label-archive">More Projects &amp; Coursework</span>
+      <span id="archive-count" class="tier-count"></span>
+    </div>
+    <div id="archive-grid" class="projects-grid"></div>
+  </div>
+
+  <!-- EMPTY FILTER STATE -->
+  <div id="projects-empty" class="projects-empty" hidden>
+    <p class="projects-empty-text">No projects match all selected flags.</p>
+    <button id="empty-reset" class="hero-cta" type="button">Reset filters</button>
   </div>
 </section>
 
@@ -624,384 +773,150 @@
   <span style="color:var(--border)">©&nbsp;<span id="yr"></span></span>
 </footer>
 
+<script src="projects.js"></script>
 <script>
   document.getElementById('yr').textContent = new Date().getFullYear();
 
-  // Consolidated project data - single source of truth
-  const projectsData = [
-    {
-      number: "001",
-      title: "Bachelor's Thesis: Virtual Keyboard Using EMG Sensors",
-      shortDesc: "A virtual keyboard controlled through finger movements detected with EMG sensors and classified using machine learning.",
-      longDesc: "A virtual keyboard system that uses electromyographic signals to detect finger movements and translate them into keyboard input.",
-      details: [
-      "This project explored an alternative input method for human-computer interaction using electromyography (EMG). The goal was to create a virtual keyboard controlled through subtle finger movements, reducing the need for conventional physical input devices.",
-      "EMG signals were collected from sensors connected to an ESP32 and processed in Python. Finger movements were classified using a Support Vector Machine (SVM), with the resulting classifications mapped to corresponding virtual keyboard keys. A calibration interface was also developed to make the system adaptable to the user.",
-      "I designed and implemented the software pipeline, including signal acquisition, processing, classification and interaction. The project required working across embedded hardware, machine learning and software development, giving me experience integrating physical sensors with an interactive application."
-      ],
-      image: "img/project-001/Ventana_Calibracion.png",
-      videoId: "",
-      images: ["img/project-001/Ventana_Calibracion.png", "img/project-001/BacThesis.png", "img/project-001/ESP32.jpeg", "img/project-001/electronica.png", "img/project-001/colocacionElectrodos.png", "img/project-001/Segmentacion.png", "img/project-001/Resultados.png"],
-      tags: ["Electronics", "Programming", "Python"],
-      links: [{"text": "Paper", "href": "https://www.linkedin.com/posts/javier-rodr%C3%ADguez-lavandeira-890284333_implementation-of-a-virtual-keybord-using-activity-7271819356676800512-JvgC/"}]
-    },
-    {
-      number: "002",
-      title: "The Garage VR",
-      shortDesc: "A VR climbing experience where drawing becomes part of the physical environment and gameplay.",
-      longDesc: "A Virtual Reality climbing puzzle game that combines drawing and physical movement, requiring players to create their own climbing holds and use limited resources wisely to reach the top.",
-      details: [ "The Garage VR combines climbing with drawing to create a resource-management puzzle. Players use a virtual painting tablet to draw their own climbing holds directly onto the environment, which are then transformed into physical objects that can be climbed.", "Ink is limited, so players must decide where to spend their resources and how much to draw. Larger holds are easier to grab but consume more ink, while smaller holds require greater precision and more careful route planning. The challenge comes from finding an efficient path to the top rather than simply creating as many holds as possible.", "I developed the VR climbing and interaction systems in Unity, combining physical climbing, drawing-based object creation, resource management and stamina mechanics. The project explores how VR can turn drawing into a physical gameplay mechanic where planning and decision-making directly shape the environment." ],
-      image: "",
-      videoId: "QcV9Jcn7vQY",
-      images: ["img/project-002/3.png", "img/project-002/4.png", "img/project-002/1.png", "img/project-002/2.png"],
-      tags: ["VR", "Unity"],
-      links: [{"text": "↗ Itch.io", "href": "https://javirola.itch.io/the-garage-vr-climbing-experience"}]
-    },
-    {
-      number: "003",
-      title: "Dream Lens",
-      shortDesc: "An award-winning AI-powered VR documentary experience exploring the boundary between observation and imagination.",
-      longDesc: "An AI-powered VR documentary experience where players use two cameras to record the world from realistic and imaginative perspectives.",
-      details: [
-      "Dream Lens is an experimental VR documentary experience created during the Cambridge AIxXR hackathon. The project explores how AI and immersive media can change the way people document and interpret the world around them.",
-      "Using hand tracking, players interact naturally with two virtual cameras. The Real Camera captures the environment as it is, while the Dream Camera transforms the same space into a more imaginative and atmospheric interpretation. Players explore two environments, a warm savannah and a snowy landscape, selecting objects and turning their observations into a visual narrative.",
-      "I worked as part of a five-person team on the Unity VR implementation and interaction systems. The project challenged us to combine AI-driven ideas with intuitive spatial interaction within a very limited development time. It was also selected as the host's favourite project at the Cambridge AIxXR hackathon, reinforcing the value of combining a clear concept with technically engaging XR interactions."
-      ],
-
-      image: "",
-      videoId: "3MpFx-T6m8s",
-      images: ["img/project-003/Savannah.png", "img/project-003/RealCam.png", "img/project-003/DreamCam.png"],
-      tags: ["VR", "AI", "Unity", "Group Project(5)"],
-      links: [{"text": "↗ Itch.io", "href": "https://numi1217.itch.io/dream-lens"}]
-    },
-    {
-      number: "004",
-      title: "Face for Face",
-      shortDesc: "A puzzle game about swapping bodies with masked mannequins, developed in under 48 hours.",
-      longDesc: "A fast-paced game development project created for the Goldsmiths Global Game Jam, built around body-swapping puzzle mechanics.",
-      details: [
-      "Face for Face is a puzzle game developed during the Goldsmiths Global Game Jam. The central idea is based around swapping the player's body with masked mannequins, turning the character itself into a gameplay mechanic.",
-      "Players use the body-swapping mechanic to navigate the environment and solve puzzles. Different bodies provide access to different areas or interactions, requiring the player to understand how the characters and environment can be combined to progress.",
-      "I worked as part of a two-person team during the 48-hour development period. The biggest challenge was deciding what to prioritise under severe time constraints while still delivering a coherent playable experience. The project strengthened my ability to prototype mechanics quickly and make technical decisions based on gameplay value rather than implementation perfection."
-      ],
-      image: "",
-      videoId: "LZFVdrko4mw",
-      images: ["img/project-004/FFF1.png", "img/project-004/FFF2.png", "img/project-004/FFF3.png", "img/project-004/FFF4.png", "img/project-004/FFF5.png", "img/project-004/FFF6.png"],
-      tags: ["Unity", "Under 48h", "Group Project(2)"],
-      links: [{"text": "↗ Itch.io", "href": "https://henryalbert.itch.io/face-for-face"}]
-    },
-    {
-      number: "005",
-      title: "Fencing VR",
-      shortDesc: "A VR fencing training simulation designed around technique and reaction time.",
-      longDesc: "A virtual reality fencing training simulation. Players engage in training fencing scenarios to improve their technique, reaction time, and strategy.",
-      details: [
-      "Fencing VR is a Virtual Reality training simulation designed to explore how immersive environments can support sports training. The project places the player in a virtual fencing environment where they can practise techniques against simulated targets.",
-      "The experience focuses on spatial interaction and timing, requiring players to react to attacks and use appropriate fencing movements. VR controllers provide direct interaction with the weapon, allowing the training scenarios to be built around physical movement rather than traditional game controls.",
-      "I worked as part of a four-person team to develop the Unity VR experience. The project gave me experience designing interactions around a physical activity and highlighted the challenges of translating real-world movements and expectations into a virtual environment."
-      ],
-      image: "",
-      videoId: "eYne4meaOyw",
-      images: ["img/project-005/Title.png", "img/project-005/fencing2.jpg", "img/project-005/fencing3.png", "img/project-005/fencing4.png"],
-      tags: ["Unity", "VR", "Group Project(4)"],
-      links: [{"text": "↗ Itch.io", "href": "https://javirola.itch.io/vr-fencing"}]
-    },
-    {
-      number: "006",
-      title: "SplitDrive",
-      shortDesc: "A two-player driving game controlled through a custom physical controller.",
-      longDesc: "A two-player driving game where each player controls one side of the vehicle through a custom-built physical controller.",
-      details: [
-      "SplitDrive is a two-player driving game designed around an unusual physical interaction: instead of controlling a vehicle individually, each player is responsible for one of its wheels. The game was created to explore how a custom controller can fundamentally change the mechanics of a conventional genre.",
-      "The custom controller divides steering and movement between two physical inputs, requiring both players to coordinate their actions to control the vehicle. This turns cooperation into the core mechanic rather than simply adding multiplayer to an existing driving system.",
-      "I developed the Unity game as well as the custom hardware and worked on the integration between both of them. The project involved designing the controller, working with electronics and translating physical input into game behaviour. It taught me how hardware constraints can be used deliberately to create more interesting interaction mechanics."
-      ],
-      image: "",
-      videoId: "Iq2FFzWkTBE",
-      images: ["img/project-006/ControllerIMG2.jpeg", "img/project-006/Schematics.png", "img/project-006/SchematicsDrawn.jpeg"],
-      tags: ["Unity", "3D", "Custom Controller"],
-      links: [{"text": "↗ GitHub", "href": "https://github.com/Javier-Rodriguez-Lavandeira/SplitDrive"}]
-    },
-    {
-      number: "007",
-      title: "Non Plannar Projections",
-      shortDesc: "Implementation of non plannar projection techniques in Unity.",
-      longDesc: "A technical Unity project investigating different approaches to rendering content onto non-planar surfaces. The project explores spherical, fisheye, and other projection techniques, demonstrating how to map textures and visuals onto curved geometries.",
-      details: [
-      "This project investigates how conventional planar projection techniques can be adapted to curved surfaces. The goal was to understand how spherical, cylindrical and conical projections can be implemented and visualised within a real-time 3D environment.",
-      "Each projection was implemented using two approaches. The first projects content onto an intermediary 3D object, while the second performs the projection independently of an object. This allowed us to compare different mathematical and rendering approaches and observe how they behave across different geometries.",
-      "I worked as part of a two-person team, implementing the projection techniques in Unity and experimenting with the underlying mathematics and shaders. The project strengthened my understanding of coordinate spaces, projection mathematics and GPU-based rendering, while also providing a foundation for working with more advanced visualisation techniques."
-      ],
-      image: "",
-      videoId: "7DkoOHFSxGw",
-      images: ["img/project-007/SphericalProj.png", "img/project-007/SphereProj2.png", "img/project-007/FishProj.png"],
-      tags: ["Unity", "3D", "Mathematics", "Shaders", "Group Project(2)"],
-      links: [{"text": "↗ Itch.io", "href": "https://henryalbert.itch.io/non-planar-projections"}]
-    },
-    {
-      number: "008",
-      title: "Klym Remake",
-      shortDesc: "A Unity remake of Klym, recreating its core mechanics while expanding the original experience.",
-      longDesc: "A Unity-based remake of Klym with improved graphics and gameplay mechanics. The project involved recreating the original game's mechanics while adding new features and enhancements.",
-      details: [
-      "Klym Remake is a recreation of the Klym game developed to explore the process of analysing an existing game and rebuilding its mechanics from scratch. Rather than simply reproducing its appearance, the project focused on understanding the systems that make the original experience work.",
-      "The project involved recreating the game's core gameplay loop, player interactions and environment within Unity. Additional improvements and features were introduced while keeping the original game's identity and mechanics as the reference point.",
-      "I implemented the remake in Unity, working through the process of breaking an existing game into smaller systems and rebuilding them independently. This was particularly useful for improving my understanding of gameplay architecture, iteration and the relationship between mechanics and level design."
-      ],
-      image: "",
-      videoId: "hDwkfFYiHjQ",
-      images: ["img/project-008/Klym1.png", "img/project-008/Klym2.png", "img/project-008/Klym3.png"],
-      tags: ["Unity", "3D", "Remake"],
-      links: [{"text": "↗ Itch.io", "href": "https://javirola.itch.io/klym-recreation"}, {"text": "↗ GitHub", "href": "https://github.com/Javier-Rodriguez-Lavandeira/Klym-Demake"}]
-    },
-    {
-      number: "009",
-      title: "L-System Visualizer",
-      shortDesc: "An interactive Unity tool for generating and visualising procedural L-Systems.",
-      longDesc: "An interactive visualisation tool that turns L-System rules into procedural structures in real time.",
-      details: [
-      "The L-System Visualizer explores procedural generation through Lindenmayer systems, a mathematical formalism commonly used to describe recursive structures such as plants and other organic forms. The project was designed as an interactive way to experiment with how simple rules can generate complex structures.",
-      "Users can modify the parameters and rules used to generate an L-System and immediately observe the resulting structure. Unity is responsible for interpreting the generated sequences and converting them into a visual 3D representation.",
-      "I implemented the system in Unity, focusing on the underlying rule-processing logic as well as the visualisation pipeline. The project helped me develop a stronger understanding of recursion, procedural generation and how mathematical systems can be translated into interactive visual experiences."
-      ],
-      image: "",
-      videoId: "obj4mHR97a8",
-      images: ["img/project-009/LS1.png", "img/project-009/LS2.png", "img/project-009/LS3.png"],
-      tags: ["Unity", "Mathematics"],
-      links: [{"text": "↗ Itch.io", "href": "https://javirola.itch.io/lsystems"}, {"text": "↗ GitHub", "href": "https://github.com/Javier-Rodriguez-Lavandeira/L-Systems"}]
-    },
-    {
-      number: "010",
-      title: "Synthetic Wild",
-      shortDesc: "A VR experience using full-body motion capture to create and record animal animations through human movement.",
-      longDesc: "A VR motion-capture experience where players animate virtual animals from the zoo using their own body movements.",
-      details: [
-      "Synthetic Wild explores how full-body motion capture can be used as an intuitive interface for creating animation. The project places the player inside a virtual zoo where their movements can be transferred onto different animal characters.",
-      "A Perception Neuron motion-capture suit and headset tracking are used to capture the player's movements. These movements are retargeted onto animal rigs in real time, while the system also allows users to record gestures and generate animation clips that can later be played back by the animals.",
-      "I worked as part of a three-person team on the Unity implementation of the motion-capture and animation pipeline. The main technical challenge was translating human movement onto characters with very different proportions and skeletons. The project gave me practical experience with motion capture, animation retargeting and designing interfaces around full-body movement."
-      ],
-      image: "",
-      videoId: "",
-      images: ["img/project-010/SW1.png", "img/project-010/SW2.png", "img/project-010/SW3.png"],
-      tags: ["Unity", "3D", "Motion Capture", "VR", "Group Project(3)"],
-      links: [{"text": "↗ GitHub", "href": "https://github.com/Javier-Rodriguez-Lavandeira/SyntheticWild"}]
-    },
-    {
-      number: "011",
-      title: "TrackManiacs",
-      shortDesc: "An AR Hot Wheels-inspired experience where players build, test and destroy racetracks in the real world.",
-      longDesc: "An augmented reality game that turns real environments into interactive racetracks through track building, portals and physics-based destruction.",
-      details: [
-      "TrackManiacs is an Augmented Reality experience inspired by Hot Wheels-style track building. The project gives players the ability to construct racetracks directly within their physical environment, turning the real world into part of the game level.",
-      "Players can place and connect track elements, create non-linear routes using portals and experiment with physics-based interactions.",
-      "I worked as part of a four-person team on the Unity AR implementation. The project required combining spatial placement, 3D physics and mobile AR interaction while keeping the experience understandable for the player. It gave me experience designing interactions where virtual objects need to feel naturally connected to the user's physical surroundings."
-      ],
-      image: "",
-      videoIds: ["F0eDUX-AvHI", "PrgmDvSdDU8"],
-      images: [],
-      tags: ["Unity", "3D", "AR", "Group Project(4)"],
-      links: []
-    },
-    {
-      number: "012",
-      title: "Modeling & Animation Projects",
-      shortDesc: "A collection of 3D modeling and animation projects showcasing various techniques and tools.",
-      longDesc: "A portfolio of 3D modeling and animation projects that demonstrate my hability in modelling and animating 3D assets.",
-      details: [
-      "These projects showcase a range of 3D modeling and animations that can be used as game assets.",
-      ],
-      image: "",
-      videoIds: ["M66fq2Y4GaA", "YSWMenUrtIo"],
-      images: ["img/project-012/PaintedGun.jpg", "img/project-012/FirstMatsGun.jpg", "img/project-012/WagonWithColor.jpg", "img/project-012/WagonWithColor2.jpg", "img/project-012/PaintedRobot.jpg", "img/project-012/KirbyWithColor.png", "img/project-012/ArmsAndLegCtrls.png"],
-      tags: ["3D Modeling", "Animation", "Blender", "Maya"],
-      links: []
-    },
-    {
-      number: "014",
-      title: "Web XR Lab",
-      shortDesc: "An interactive platform showcasing AI-powered experiments in augmented reality, computer vision and spatial computing.",
-      longDesc: "XR Lab is a personal web-based experimentation platform exploring the possibilities of AI, augmented reality and computer vision through a collection of interactive applications and prototypes.",
-      details: [
-        "XR Lab is a personal development platform created to explore emerging technologies across artificial intelligence, augmented reality, computer vision and spatial computing. Built as a collection of independent web experiments, the project provides a space to prototype, develop and showcase interactive applications that explore new ways of interacting with digital content through everyday devices.",
-        "The platform brings together a growing collection of experiments, each focusing on a different technological concept or interaction. These include hand gesture recognition, natural hand-based object manipulation, image tracking, 3D model visualisation, facial landmark analysis and hand gesture recognition. Other experiments explore more specialised applications, such as climbing technique analysis through computer vision and biomechanical movement tracking.",
-        "Developed with a modern web technology stack, XR Lab prioritises browser-based experiences that can run directly on smartphones, desktop computers and compatible virtual reality headsets, without requiring dedicated native applications. Its modular architecture allows individual experiments to be developed independently while sharing common infrastructure, creating a flexible environment for rapid prototyping and technological exploration.",
-        "A central aspect of the project is its AI-assisted development workflow, using AI agents to research, design, implement and iterate on new ideas. Rather than focusing on a single application, XR Lab continuously evolves as a laboratory for experimentation, investigating how accessible AI and web technologies can transform the way people interact with their surroundings and digital environments."
-      ],
-      image: "",
-      videoId: "",
-      images: ["img/project-014/1.png", "img/project-014/2.png", "img/project-014/3.png"],
-      tags: ["AI", "Web Development", "Computer Vision", "AR", "XR", "Three.js", "React", "TypeScript", "In Development"],
-      links: [{"text": "↗ Website", "href": "https://javirolaxrlab.netlify.app/"}]
-    },
-   {
-      number: "015",
-      title: "CIVITAS 2042",
-      shortDesc: "A multiplayer VR learning experience exploring the future of democracy, AI governance and collective responsibility through immersive role-playing and interactive decision-making.",
-      longDesc: "CIVITAS 2042 is an immersive multiplayer VR experience developed during the Cambridge EduX Hackathon 2026. Set in a future society governed increasingly by artificial intelligence, the project allows players to assume different citizen identities, debate AI-generated policy proposals and experience the consequences of their collective decisions.",
-      details: [
-        "CIVITAS 2042 is an immersive educational VR experience developed collaboratively by a team of three during the Cambridge EduX Hackathon 2026. The project explores a central question: if artificial intelligence could predict the consequences of every decision and design the best possible society, would democracy and human decision-making still be necessary? Designed for higher education, the experience transforms discussions about AI ethics, democratic participation and responsible governance into an interactive simulation.",
-        "Players enter a futuristic city and assume the identities of different citizens, each with their own background, priorities and personal environment. These include a healthcare worker advocating for better medical services, an AI company CEO promoting automated governance, a politician concerned about algorithmic bias and a student seeking affordable housing and employment. Through these different perspectives, players experience how the same political decisions can affect individuals and communities in very different ways.",
-        "The core gameplay revolves around an AI Policy Maker that proposes changes to the city's policies and resource allocation. Players gather around a shared virtual council table, discuss proposals and physically interact with voting tokens to agree, disagree or negotiate. The consequences of their decisions are then reflected in the simulated city, with changes to buildings, economic indicators, headlines and citizen diaries. The experience supports up to four human players through multiplayer sessions with voice communication, while AI-controlled citizens fill unoccupied roles to ensure that sessions remain playable with smaller groups.",
-        "The prototype was developed using Unity 6 and the XR Interaction Toolkit, targeting Meta Quest and Android XR headsets. Additional features include individual identity environments, interactive token-based voting, multiplayer communication, AI citizen characters and an AI Policy Maker with on-device neural text-to-speech and highlighted captions. The project follows an experiential learning approach, allowing students to live through decisions, reflect on their consequences and replay the experience from different perspectives. Future development directions include more sophisticated LLM-driven policy generation, dynamic consensus mechanisms and AI-generated citizen identities and environments."
-      ],
-      image: "",
-      videoId: "gBVl4UO5sw4",
-      images: [],
-      tags: [
-        "Virtual Reality",
-        "XR",
-        "AI",
-        "Multiplayer",
-        "Unity",
-        "Hackathon 2026"
-      ],
-      links: []
-    },
-    {
-      number: "013",
-      title: "RouteSetterVR",
-      shortDesc: "A virtual reality climbing experience. Under Development.",
-      longDesc: "RouteSetter VR is a virtual reality climbing experience developed in Unity that explores new ways of designing, customising and interacting with climbing environments.",
-      details: [
-        "RouteSetter VR is an immersive virtual reality climbing experience developed in Unity, exploring how VR can transform the way people interact with climbing environments. Originally conceived as a tool to help real-world route setters design and visualise climbing routes before installing them on physical walls, the project has evolved into a broader experience combining climbing simulation, creative tools and multiplayer interaction.",
-        "At its core, RouteSetter VR features an interactive route-setting system that allows players to build and customise their own climbing walls. Using manual and distance-based placement methods, players can position and rotate climbing holds directly on virtual surfaces. A dedicated hold dispenser provides access to different hold shapes and volumes, alongside colour customisation tools for creating visually distinct routes. The experience also includes a persistence system that saves the gym configuration, preserving attached holds, their positions, rotations and colours across sessions.",
-        "The climbing mechanics are designed around a dynamic stamina system, where energy consumption depends on several factors, including grip strength, hand positioning and hold geometry. Different hold types, such as jugs, crimps and slopers, introduce distinct challenges that encourage players to consider their technique and energy management. A guided tutorial helps introduce the experience and its mechanics, making the different systems more accessible to new players.",
-        "More recently, multiplayer functionality has expanded RouteSetter VR beyond a single-player experience, allowing users to share the virtual climbing environment. The project brings together VR interaction, climbing simulation, spatial object manipulation, persistent data management and networked gameplay within a single Unity application. Through its ongoing development, RouteSetter VR explores the possibilities of virtual reality as a platform for climbing, creativity and collaborative route design."
-      ],
-      image: "",
-      videoId: "",
-      images: ["img/project-013/1.png", "img/project-013/2.png"],
-      tags: ["Unity", "VR", "Climbing", "Multiplayer", "In Development"],
-      links: [{"text": "↗ Instagram", "href": "https://www.instagram.com/routesettervr/"}]
-    }
-  ];
-
-
-  // Store original project data to preserve them
   const projectDatabase = {};
-  const carouselState = {}; // Track current image and video index for each project
-  
-  // Initialize project database and generate HTML
-  function initializeProjectData() {
-    const projectsGrid = document.querySelector('.projects-grid');
-    
-    projectsData.forEach((project, index) => {
-      // Normalize video data: convert videoId to videoIds array if needed
+  const carouselState = {};
+  const activeFlags = new Set();
+  let currentFeaturedNumber = null;
+
+  function initProjectState() {
+    PROJECTS_DATA.forEach(project => {
       if (!project.videoIds) {
         project.videoIds = project.videoId ? [project.videoId] : [];
       }
-      
       projectDatabase[project.number] = project;
-      carouselState[project.number] = { currentImageIndex: 0, currentVideoIndex: 0, showingVideo: project.videoIds.length > 0 };
-      
-      if (index === projectsData.length - 1) {
-        // Generate featured project HTML
-        const featured = document.getElementById('featured-project');
-        featured.dataset.number = project.number;
-        featured.dataset.title = project.title;
-        featured.dataset.shortDesc = project.shortDesc;
-        featured.dataset.longDesc = project.longDesc;
-        featured.dataset.image = project.image;
-        featured.dataset.videoIds = JSON.stringify(project.videoIds);
-        featured.dataset.images = JSON.stringify(project.images);
-        featured.dataset.tags = project.tags.join(',');
-        featured.dataset.links = JSON.stringify(project.links);
-        
-        // Update featured content
-        const contentDiv = featured.querySelector('div:first-child');
-        contentDiv.innerHTML = `
-          <div class="project-number">${project.number} — Featured</div>
-          <h3 class="project-title">${project.title}</h3>
-          <p class="project-desc">${project.longDesc}</p>
-          <div class="project-tags">
-            ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-          </div>
-          <div class="project-links">
-            ${project.links.map(link => `
-              <a href="${link.href}" class="project-link" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                ${link.text}
-              </a>
-            `).join('')}
-          </div>
-        `;
-        
-        // Update featured visual
-        const visualDiv = featured.querySelector('.featured-visual');
-        if (project.videoIds.length > 0) {
-          visualDiv.innerHTML = `
-            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;">
-              <iframe style="width:100%;height:100%;border:none;" src="https://www.youtube.com/embed/${project.videoIds[0]}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-              ${project.images.length > 0 ? `
-                <div style="position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:0.5rem;z-index:10;">
-                  <button class="carousel-tab" data-tab="video" style="background:var(--accent);color:#000;padding:0.4rem 1rem;border:none;cursor:pointer;font-weight:bold;font-size:0.7rem;">${project.videoIds.length === 1 ? 'Video' : `Videos (${project.videoIds.length})`}</button>
-                  <button class="carousel-tab" data-tab="images" style="background:transparent;color:var(--accent);padding:0.4rem 1rem;border:1px solid var(--accent);cursor:pointer;font-weight:bold;font-size:0.7rem;">Imágenes (${project.images.length})</button>
-                </div>
-              ` : ''}
-            </div>
-          `;
-        } else if (project.images.length > 0) {
-          visualDiv.innerHTML = `
-            <div class="carousel-container">
-              <img src="${project.images[0]}" alt="Project image 1" style="width:100%;height:100%;object-fit:contain;" onclick="openImageModal('${project.images[0]}')">
-              ${project.images.length > 1 ? `
-                <button class="carousel-nav prev" onclick="changeImage('${project.number}', -1)">‹</button>
-                <button class="carousel-nav next" onclick="changeImage('${project.number}', 1)">›</button>
-                <div class="carousel-dots">
-                  ${project.images.map((_, i) => `<div class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="changeImage('${project.number}', ${i})"></div>`).join('')}
-                </div>
-              ` : ''}
-              <div class="carousel-label">1/${project.images.length}</div>
-            </div>
-          `;
-        } else {
-          visualDiv.innerHTML = `<img src="${project.image}" alt="${project.title}" style="width: 100%; height: 100%; object-fit: contain;" onclick="openImageModal('${project.image}')">`;
-        }
-      } else {
-        // Generate project card HTML
-        const card = document.createElement('div');
-        card.className = 'project-card project-slot';
-        card.id = `project-${project.number}`;
-        card.dataset.number = project.number;
-        card.dataset.title = project.title;
-        card.dataset.shortDesc = project.shortDesc;
-        card.dataset.longDesc = project.longDesc;
-        card.dataset.image = project.image;
-        card.dataset.videoId = project.videoId;
-        card.dataset.images = JSON.stringify(project.images);
-        card.dataset.tags = project.tags.join(',');
-        card.dataset.links = JSON.stringify(project.links);
-        
-        card.innerHTML = `
-          <div class="project-number">${project.number}</div>
-          <h3 class="project-title">${project.title}</h3>
-          <p class="project-desc">${project.shortDesc}</p>
-          <div class="project-tags">
-            ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-          </div>
-          <div class="project-links">
-            ${project.links.map(link => `
-              <a href="${link.href}" class="project-link" target="_blank" rel="noopener noreferrer">${link.text}</a>
-            `).join('')}
-          </div>
-        `;
-        
-        projectsGrid.appendChild(card);
-      }
+      carouselState[project.number] = {
+        currentImageIndex: 0,
+        currentVideoIndex: 0,
+        showingVideo: project.videoIds.length > 0
+      };
     });
-  }
-  
 
-  // Function to update featured project display
+    const defaultFlagship = PROJECTS_DATA
+      .filter(p => p.flagship)
+      .sort((a, b) => (a.flagshipOrder || 999) - (b.flagshipOrder || 999))[0];
+
+    currentFeaturedNumber = defaultFlagship ? defaultFlagship.number : PROJECTS_DATA[0]?.number;
+  }
+
+  function renderFilterBar() {
+    const pillsContainer = document.getElementById('filter-pills');
+    const statusEl = document.getElementById('filter-status');
+    const resetBtn = document.getElementById('filter-reset');
+    const counts = getFlagCounts(PROJECTS_DATA, FILTER_FLAGS);
+
+    const allButton = `
+      <button type="button" class="filter-pill ${activeFlags.size === 0 ? 'active' : ''}" data-flag="__all__" aria-pressed="${activeFlags.size === 0}">
+        All <span class="filter-count">${PROJECTS_DATA.length}</span>
+      </button>
+    `;
+
+    const flagButtons = FILTER_FLAGS.map(flag => {
+      const isActive = activeFlags.has(flag);
+      return `
+        <button type="button" class="filter-pill ${isActive ? 'active' : ''}" data-flag="${flag}" aria-pressed="${isActive}">
+          ${flag} <span class="filter-count">${counts[flag] || 0}</span>
+        </button>
+      `;
+    }).join('');
+
+    pillsContainer.innerHTML = allButton + flagButtons;
+
+    const filteredCount = filterProjects(PROJECTS_DATA, activeFlags, 'all').length;
+    if (activeFlags.size === 0) {
+      statusEl.textContent = `Showing all ${PROJECTS_DATA.length} projects`;
+      resetBtn.hidden = true;
+    } else {
+      const flagSummary = Array.from(activeFlags).join(' + ');
+      statusEl.textContent = `Showing ${filteredCount} of ${PROJECTS_DATA.length} projects · ${flagSummary}`;
+      resetBtn.hidden = false;
+    }
+  }
+
+  function createProjectCard(project, isFlagship) {
+    const card = document.createElement('div');
+    const isActive = project.number === currentFeaturedNumber;
+    card.className = `project-card project-slot${isFlagship ? ' flagship-card' : ''}${isActive ? ' is-active' : ''}`;
+    card.id = `project-${project.number}`;
+    card.dataset.number = project.number;
+
+    card.innerHTML = `
+      <div class="project-card-top">
+        <div class="project-number">${project.number}</div>
+        <div class="project-card-badges">
+          ${isFlagship ? '<span class="flagship-badge">Flagship</span>' : ''}
+          ${isActive ? '<span class="viewing-badge">In Spotlight</span>' : ''}
+        </div>
+      </div>
+      <h3 class="project-title">${project.title}</h3>
+      <p class="project-desc">${project.shortDesc}</p>
+      <div class="project-tags">
+        ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+      </div>
+      <div class="project-links">
+        ${project.links.map(link => `
+          <a href="${link.href}" class="project-link" target="_blank" rel="noopener noreferrer">${link.text}</a>
+        `).join('')}
+        <button type="button" class="project-link project-details-btn" data-details="${project.number}">Details →</button>
+      </div>
+    `;
+
+    return card;
+  }
+
+  function renderProjects() {
+    const filtered = filterProjects(PROJECTS_DATA, activeFlags, 'all');
+    const flagships = filtered
+      .filter(p => p.flagship)
+      .sort((a, b) => (a.flagshipOrder || 999) - (b.flagshipOrder || 999));
+    const archive = filtered.filter(p => !p.flagship);
+
+    const flagshipTier = document.getElementById('flagship-tier');
+    const flagshipGrid = document.getElementById('flagship-grid');
+    const flagshipCount = document.getElementById('flagship-count');
+
+    const archiveTier = document.getElementById('archive-tier');
+    const archiveGrid = document.getElementById('archive-grid');
+    const archiveCount = document.getElementById('archive-count');
+
+    const emptyState = document.getElementById('projects-empty');
+
+    flagshipGrid.innerHTML = '';
+    archiveGrid.innerHTML = '';
+
+    if (flagships.length > 0) {
+      flagshipTier.hidden = false;
+      flagshipCount.textContent = `${flagships.length} ${flagships.length === 1 ? 'project' : 'projects'}`;
+      flagships.forEach(p => flagshipGrid.appendChild(createProjectCard(p, true)));
+    } else {
+      flagshipTier.hidden = true;
+    }
+
+    if (archive.length > 0) {
+      archiveTier.hidden = false;
+      archiveCount.textContent = `${archive.length} ${archive.length === 1 ? 'project' : 'projects'}`;
+      archive.forEach(p => archiveGrid.appendChild(createProjectCard(p, false)));
+    } else {
+      archiveTier.hidden = true;
+    }
+
+    emptyState.hidden = filtered.length > 0;
+  }
+
   function updateFeaturedDisplay(projectNumber) {
     const featured = document.getElementById('featured-project');
     const contentDiv = featured.querySelector('div:first-child');
     const visualDiv = featured.querySelector('.featured-visual');
     const projectData = projectDatabase[projectNumber];
+    if (!projectData) return;
 
-    // Update content
+    featured.dataset.number = projectNumber;
+
     contentDiv.innerHTML = `
-      <div class="project-number">${projectData.number} — Featured</div>
+      <div class="project-number">${projectData.number} — Featured${projectData.flagship ? ' · Flagship' : ''}</div>
       <h3 class="project-title">${projectData.title}</h3>
       <p class="project-desc">${projectData.longDesc}</p>
       <div class="project-tags">
@@ -1017,24 +932,21 @@
       </div>
     `;
 
-    // Update visual (image or video)
     const state = carouselState[projectNumber];
     if (state.showingVideo && projectData.videoIds.length > 0) {
       if (projectData.videoIds.length === 1) {
-        // Single video
         visualDiv.innerHTML = `
           <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;">
             <iframe style="width:100%;height:100%;border:none;" src="https://www.youtube.com/embed/${projectData.videoIds[0]}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             ${projectData.images.length > 0 ? `
               <div style="position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:0.5rem;z-index:10;">
-                <button class="carousel-tab" data-tab="video" style="background:var(--accent);color:#000;padding:0.4rem 1rem;border:none;cursor:pointer;font-weight:bold;font-size:0.7rem;">${projectData.videoIds.length === 1 ? 'Video' : `Videos (${projectData.videoIds.length})`}</button>
-                <button class="carousel-tab" data-tab="images" style="background:transparent;color:var(--accent);padding:0.4rem 1rem;border:1px solid var(--accent);cursor:pointer;font-weight:bold;font-size:0.7rem;">Imágenes (${projectData.images.length})</button>
+                <button class="carousel-tab" data-tab="video" style="background:var(--accent);color:#000;padding:0.4rem 1rem;border:none;cursor:pointer;font-weight:bold;font-size:0.7rem;">Video</button>
+                <button class="carousel-tab" data-tab="images" style="background:transparent;color:var(--accent);padding:0.4rem 1rem;border:1px solid var(--accent);cursor:pointer;font-weight:bold;font-size:0.7rem;">Images (${projectData.images.length})</button>
               </div>
             ` : ''}
           </div>
         `;
       } else {
-        // Multiple videos carousel
         const currentIndex = state.currentVideoIndex;
         visualDiv.innerHTML = `
           <div class="carousel-container">
@@ -1042,20 +954,19 @@
             <button class="carousel-nav prev" onclick="changeVideo('${projectNumber}', -1)">‹</button>
             <button class="carousel-nav next" onclick="changeVideo('${projectNumber}', 1)">›</button>
             <div class="carousel-dots">
-              ${projectData.videoIds.map((_, i) => `<div class="carousel-dot ${i === currentIndex ? 'active' : ''}" onclick="changeVideo('${projectNumber}', ${i - currentIndex})"></div>`).join('')}
+              ${projectData.videoIds.map((_, i) => `<div class="carousel-dot ${i === currentIndex ? 'active' : ''}" onclick="goToVideo('${projectNumber}', ${i})"></div>`).join('')}
             </div>
             <div class="carousel-label">${currentIndex + 1}/${projectData.videoIds.length}</div>
             ${projectData.images.length > 0 ? `
               <div style="position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:0.5rem;z-index:10;">
                 <button class="carousel-tab" data-tab="video" style="background:var(--accent);color:#000;padding:0.4rem 1rem;border:none;cursor:pointer;font-weight:bold;font-size:0.7rem;">Videos (${projectData.videoIds.length})</button>
-                <button class="carousel-tab" data-tab="images" style="background:transparent;color:var(--accent);padding:0.4rem 1rem;border:1px solid var(--accent);cursor:pointer;font-weight:bold;font-size:0.7rem;">Imágenes (${projectData.images.length})</button>
+                <button class="carousel-tab" data-tab="images" style="background:transparent;color:var(--accent);padding:0.4rem 1rem;border:1px solid var(--accent);cursor:pointer;font-weight:bold;font-size:0.7rem;">Images (${projectData.images.length})</button>
               </div>
             ` : ''}
           </div>
         `;
       }
     } else if (projectData.images.length > 0) {
-      // Show images carousel
       const currentIndex = state.currentImageIndex;
       visualDiv.innerHTML = `
         <div class="carousel-container">
@@ -1064,29 +975,42 @@
             <button class="carousel-nav prev" onclick="changeImage('${projectNumber}', -1)">‹</button>
             <button class="carousel-nav next" onclick="changeImage('${projectNumber}', 1)">›</button>
             <div class="carousel-dots">
-              ${projectData.images.map((_, i) => `<div class="carousel-dot ${i === currentIndex ? 'active' : ''}" onclick="changeImage('${projectNumber}', ${i - currentIndex})"></div>`).join('')}
+              ${projectData.images.map((_, i) => `<div class="carousel-dot ${i === currentIndex ? 'active' : ''}" onclick="goToImage('${projectNumber}', ${i})"></div>`).join('')}
             </div>
           ` : ''}
           <div class="carousel-label">${currentIndex + 1}/${projectData.images.length}</div>
           ${projectData.videoIds && projectData.videoIds.length > 0 ? `
             <div style="position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:0.5rem;z-index:10;">
               <button class="carousel-tab" data-tab="video" style="background:transparent;color:var(--accent);padding:0.4rem 1rem;border:1px solid var(--accent);cursor:pointer;font-weight:bold;font-size:0.7rem;">${projectData.videoIds.length === 1 ? 'Video' : `Videos (${projectData.videoIds.length})`}</button>
-              <button class="carousel-tab" data-tab="images" style="background:var(--accent);color:#000;padding:0.4rem 1rem;border:none;cursor:pointer;font-weight:bold;font-size:0.7rem;">Imágenes (${projectData.images.length})</button>
+              <button class="carousel-tab" data-tab="images" style="background:var(--accent);color:#000;padding:0.4rem 1rem;border:none;cursor:pointer;font-weight:bold;font-size:0.7rem;">Images (${projectData.images.length})</button>
             </div>
           ` : ''}
         </div>
       `;
     } else {
-      // Show static image
       visualDiv.innerHTML = `<img src="${projectData.image}" alt="${projectData.title}" style="width: 100%; height: 100%; object-fit: contain;" onclick="openImageModal('${projectData.image}')">`;
     }
 
-    // Add smooth fade effect
     featured.style.opacity = '0.8';
     setTimeout(() => { featured.style.opacity = '1'; }, 50);
   }
 
-  // Function to change image in carousel
+  function selectFeaturedProject(projectNumber) {
+    const project = projectDatabase[projectNumber];
+    if (!project) return;
+
+    currentFeaturedNumber = projectNumber;
+    carouselState[projectNumber] = {
+      currentImageIndex: 0,
+      currentVideoIndex: 0,
+      showingVideo: project.videoIds.length > 0
+    };
+
+    updateFeaturedDisplay(projectNumber);
+    renderProjects();
+    document.getElementById('featured-project').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
   function changeImage(projectNumber, direction) {
     const projectData = projectDatabase[projectNumber];
     const state = carouselState[projectNumber];
@@ -1094,7 +1018,11 @@
     updateFeaturedDisplay(projectNumber);
   }
 
-  // Function to change video in carousel
+  function goToImage(projectNumber, index) {
+    carouselState[projectNumber].currentImageIndex = index;
+    updateFeaturedDisplay(projectNumber);
+  }
+
   function changeVideo(projectNumber, direction) {
     const projectData = projectDatabase[projectNumber];
     const state = carouselState[projectNumber];
@@ -1102,7 +1030,11 @@
     updateFeaturedDisplay(projectNumber);
   }
 
-  // Function to open image modal
+  function goToVideo(projectNumber, index) {
+    carouselState[projectNumber].currentVideoIndex = index;
+    updateFeaturedDisplay(projectNumber);
+  }
+
   function openImageModal(src) {
     const modal = document.createElement('div');
     modal.className = 'image-modal';
@@ -1111,14 +1043,61 @@
     document.body.appendChild(modal);
   }
 
-  // Function to switch between video and images
+  function clearFilters() {
+    activeFlags.clear();
+    renderFilterBar();
+    renderProjects();
+  }
+
+  document.getElementById('filter-pills').addEventListener('click', function(e) {
+    const pill = e.target.closest('.filter-pill');
+    if (!pill) return;
+
+    const flag = pill.dataset.flag;
+    if (flag === '__all__') {
+      clearFilters();
+      return;
+    }
+
+    if (activeFlags.has(flag)) {
+      activeFlags.delete(flag);
+    } else {
+      if (flag === 'Team') activeFlags.delete('Solo');
+      if (flag === 'Solo') activeFlags.delete('Team');
+      activeFlags.add(flag);
+    }
+
+    renderFilterBar();
+    renderProjects();
+  });
+
+  document.getElementById('filter-reset').addEventListener('click', clearFilters);
+  document.getElementById('empty-reset').addEventListener('click', clearFilters);
+
+  function handleGridClick(e) {
+    if (e.target.closest('a')) return;
+
+    const detailsBtn = e.target.closest('.project-details-btn');
+    if (detailsBtn) {
+      openProjectModal(detailsBtn.dataset.details);
+      return;
+    }
+
+    const card = e.target.closest('.project-slot');
+    if (!card) return;
+    selectFeaturedProject(card.dataset.number);
+  }
+
+  document.getElementById('flagship-grid').addEventListener('click', handleGridClick);
+  document.getElementById('archive-grid').addEventListener('click', handleGridClick);
+
   document.addEventListener('click', function(e) {
     if (e.target.classList.contains('carousel-tab')) {
       const tab = e.target.dataset.tab;
       const featured = document.getElementById('featured-project');
       const projectNumber = featured.dataset.number;
       const state = carouselState[projectNumber];
-      
+
       if (tab === 'video' && !state.showingVideo) {
         state.showingVideo = true;
         updateFeaturedDisplay(projectNumber);
@@ -1130,134 +1109,87 @@
     }
   });
 
-  // Function to update card display
-  function updateCardDisplay(card, projectNumber) {
-    const projectData = projectDatabase[projectNumber];
-
-    card.innerHTML = `
-      <div class="project-number">${projectData.number}</div>
-      <h3 class="project-title">${projectData.title}</h3>
-      <p class="project-desc">${projectData.shortDesc}</p>
-      <div class="project-tags">
-        ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-      </div>
-      <div class="project-links">
-        ${projectData.links.map(link => `
-          <a href="${link.href}" class="project-link" target="_blank" rel="noopener noreferrer">${link.text}</a>
-        `).join('')}
-      </div>
-    `;
+  // ── PROJECT DETAIL POPUP ──
+  function openVideoModal(id) {
+    const m = document.createElement('div');
+    m.className = 'image-modal';
+    m.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    m.onclick = () => m.remove();
+    document.body.appendChild(m);
   }
 
-  // Initialize data on page load
-  initializeProjectData();
+  function closeProjectModal() {
+    document.querySelector('.pm-overlay')?.remove();
+    document.querySelector('.pm-close')?.remove();
+    document.body.style.overflow = '';
+  }
 
-  // Add click handlers to project cards
-  document.querySelectorAll('.project-slot').forEach(card => {
-    card.addEventListener('click', function(e) {
-      // Don't trigger on link clicks
-      if (e.target.closest('a')) return;
+  function openProjectModal(num) {
+    const p = projectDatabase[num];
+    if (!p) return;
+    closeProjectModal();
 
-      const featured = document.getElementById('featured-project');
-      const currentFeaturedNumber = featured.dataset.number;
-      const clickedProjectNumber = this.dataset.number;
+    const paragraphs = p.details || [p.longDesc];
+    const images = p.images.length ? p.images : (p.image ? [p.image] : []);
 
-      // Swap: display clicked project in featured, and featured project in card
-      updateFeaturedDisplay(clickedProjectNumber);
-      updateCardDisplay(this, currentFeaturedNumber);
+    const overlay = document.createElement('div');
+    overlay.className = 'pm-overlay';
+    overlay.innerHTML = `
+      <div class="pm-panel">
+        <div class="project-number">${p.number}${p.flagship ? ' · Flagship' : ''}</div>
+        <h3 class="project-title">${p.title}</h3>
+        <div class="project-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+        ${paragraphs.map(t => `<p class="project-desc">${t}</p>`).join('')}
+        <div class="project-links">
+          ${p.links.map(l => `<a href="${l.href}" class="project-link" target="_blank" rel="noopener noreferrer">${l.text}</a>`).join('')}
+        </div>
+        ${p.videoIds.length ? `
+          <div class="pm-heading">Video${p.videoIds.length > 1 ? 's' : ''}</div>
+          <div class="pm-grid">
+            ${p.videoIds.map(id => `
+              <div class="pm-media video" data-video="${id}">
+                <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg" alt="Video thumbnail" loading="lazy">
+              </div>`).join('')}
+          </div>` : ''}
+        ${images.length ? `
+          <div class="pm-heading">Images</div>
+          <div class="pm-grid">
+            ${images.map(src => `<div class="pm-media" data-img="${src}"><img src="${src}" alt="${p.title}" loading="lazy"></div>`).join('')}
+          </div>` : ''}
+      </div>`;
 
-      // Reset carousel state for new featured project
-      carouselState[clickedProjectNumber] = { currentImageIndex: 0, currentVideoIndex: 0, showingVideo: projectDatabase[clickedProjectNumber].videoIds.length > 0 };
-
-      // Update data attributes for consistency
-      featured.dataset.number = clickedProjectNumber;
-      this.dataset.number = currentFeaturedNumber;
-
-      // Scroll to featured project
-      featured.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) return closeProjectModal();
+      const media = e.target.closest('.pm-media');
+      if (!media) return;
+      if (media.dataset.video) openVideoModal(media.dataset.video);
+      else openImageModal(media.dataset.img);
     });
+
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'pm-close';
+    closeBtn.textContent = '✕';
+    closeBtn.onclick = closeProjectModal;
+
+    document.body.append(overlay, closeBtn);
+    document.body.style.overflow = 'hidden';
+  }
+
+  document.getElementById('featured-project').addEventListener('click', e => {
+    if (e.target.closest('a, button, .carousel-dot, img, iframe')) return;
+    openProjectModal(e.currentTarget.dataset.number);
   });
 
-  // ── PROJECT DETAIL POPUP ──
-function openVideoModal(id) {
-  const m = document.createElement('div');
-  m.className = 'image-modal';
-  m.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
-  m.onclick = () => m.remove();
-  document.body.appendChild(m);
-}
-
-function closeProjectModal() {
-  document.querySelector('.pm-overlay')?.remove();
-  document.querySelector('.pm-close')?.remove();
-  document.body.style.overflow = '';
-}
-
-function openProjectModal(num) {
-  const p = projectDatabase[num];
-  if (!p) return;
-  closeProjectModal();
-
-  // Optional: add a `details: ["paragraph 1", "paragraph 2"]` array to any project for a longer text
-  const paragraphs = p.details || [p.longDesc];
-  const images = p.images.length ? p.images : (p.image ? [p.image] : []);
-
-  const overlay = document.createElement('div');
-  overlay.className = 'pm-overlay';
-  overlay.innerHTML = `
-    <div class="pm-panel">
-      <div class="project-number">${p.number}</div>
-      <h3 class="project-title">${p.title}</h3>
-      <div class="project-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
-      ${paragraphs.map(t => `<p class="project-desc">${t}</p>`).join('')}
-      <div class="project-links">
-        ${p.links.map(l => `<a href="${l.href}" class="project-link" target="_blank" rel="noopener noreferrer">${l.text}</a>`).join('')}
-      </div>
-      ${p.videoIds.length ? `
-        <div class="pm-heading">Video${p.videoIds.length > 1 ? 's' : ''}</div>
-        <div class="pm-grid">
-          ${p.videoIds.map(id => `
-            <div class="pm-media video" data-video="${id}">
-              <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg" alt="Video thumbnail" loading="lazy">
-            </div>`).join('')}
-        </div>` : ''}
-      ${images.length ? `
-        <div class="pm-heading">Images</div>
-        <div class="pm-grid">
-          ${images.map(src => `<div class="pm-media" data-img="${src}"><img src="${src}" alt="${p.title}" loading="lazy"></div>`).join('')}
-        </div>` : ''}
-    </div>`;
-
-  // click outside the panel closes it
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) return closeProjectModal();
-    const media = e.target.closest('.pm-media');
-    if (!media) return;
-    if (media.dataset.video) openVideoModal(media.dataset.video);
-    else openImageModal(media.dataset.img);
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    const lightbox = document.querySelector('.image-modal');
+    if (lightbox) lightbox.remove(); else closeProjectModal();
   });
 
-  const closeBtn = document.createElement('button');
-  closeBtn.className = 'pm-close';
-  closeBtn.textContent = '✕';
-  closeBtn.onclick = closeProjectModal;
-
-  document.body.append(overlay, closeBtn);
-  document.body.style.overflow = 'hidden';
-}
-
-// open when the featured project is clicked (ignoring its own controls)
-document.getElementById('featured-project').addEventListener('click', e => {
-  if (e.target.closest('a, button, .carousel-dot, img, iframe')) return;
-  openProjectModal(e.currentTarget.dataset.number);
-});
-
-// Esc closes the lightbox first, then the popup
-document.addEventListener('keydown', e => {
-  if (e.key !== 'Escape') return;
-  const lightbox = document.querySelector('.image-modal');
-  if (lightbox) lightbox.remove(); else closeProjectModal();
-});
+  initProjectState();
+  updateFeaturedDisplay(currentFeaturedNumber);
+  renderFilterBar();
+  renderProjects();
 </script>
 </body>
 </html>
