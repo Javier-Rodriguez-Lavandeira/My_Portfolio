@@ -358,6 +358,29 @@ const PROJECTS_DATA = [
     links: []
   },
   {
+    number: "016",
+    title: "WAWlib",
+    shortDesc: "A private-by-default web application for tracking anime and manga, featuring AniList discovery, timezone-aware release calendars, analytics, and a Crunchyroll browser extension.",
+    longDesc: "WAWlib is a personal entertainment library deployed on Cloudflare Workers that lets users privately track anime, manga, and light novels with AniList search, broadcast release calendars, shareable collections, watch-time analytics, and optional Crunchyroll auto-tracking.",
+    details: [
+      "WAWlib is a private-by-default personal entertainment library designed for tracking anime (TV series, films, OVAs, ONAs, and specials) and manga (manga, light novels, and one-shots). Users can sign in to a private account or immediately explore the full interface using a local-only Guest Mode.",
+      "The workspace is organised around an Overview dashboard (continue watching, postponed and behind tracking, and upcoming episodes), an AniList-powered Discover catalog with format filters and community scores, and a timezone-aware weekly Release Calendar that converts Japanese broadcast times to the user's local timezone.",
+      "Beyond basic episode and chapter logging, WAWlib includes custom Collections with shareable read-only snapshot links, a Stats & History dashboard (estimated watch time, average ratings, favourite genres, and filterable activity timelines), a bilingual EN/ES interface, and a pre-configured Chrome/Edge extension for automatic Crunchyroll tracking.",
+      "Deployed on Cloudflare Workers with a dark Tailwind CSS interface, the application integrates AniList metadata, streaming provider links, and configurable broadcast notification lead times into a fast, cohesive web experience."
+    ],
+    image: "",
+    videoId: "",
+    images: [
+      "img/project-016/1.png",
+      "img/project-016/2.png"
+    ],
+    tags: ["Web Development", "Full-Stack"],
+    flags: ["Web", "Solo", "AI"],
+    links: [
+      { text: "↗ Website", href: "https://wawlib.javirlcy.workers.dev/" }
+    ]
+  },
+  {
     number: "013",
     title: "RouteSetterVR",
     shortDesc: "A virtual reality climbing experience. Under Development.",
