@@ -180,9 +180,37 @@
     opacity: 0;
   }
   .project-card:hover .card-img-primary { transform: scale(1.04); }
-  .project-card:hover .card-img-hover {
+  .project-card:not(.has-video-preview):hover .card-img-hover {
     opacity: 1;
     transform: scale(1.04);
+  }
+  .card-video-preview {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    aspect-ratio: 16 / 9;
+    transform: translate(-50%, -50%) scale(1.06);
+    border: none;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity .35s ease;
+  }
+  .card-video-preview.is-ready {
+    opacity: 1;
+  }
+  .project-card.is-playing-video .card-media::after {
+    opacity: 0.35;
+    transition: opacity .3s ease;
+  }
+  .project-card.is-playing-video .media-pill.has-video {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+    font-weight: 700;
   }
   .media-top-badges {
     position: absolute; top: 0.75rem; left: 0.75rem; z-index: 3;
@@ -861,6 +889,91 @@
   const carouselState = {};
   const activeFlags = new Set();
   let currentFeaturedNumber = null;
+  let hoverVideoTimer = null;
+  let activeHoverCard = null;
+
+  function canHoverPreview() {
+    return window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  }
+
+  function buildHoverVideoUrl(videoId) {
+    return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3`;
+  }
+
+  function stopCardVideoPreview(targetCard = null) {
+    if (hoverVideoTimer) {
+      clearTimeout(hoverVideoTimer);
+      hoverVideoTimer = null;
+    }
+
+    const card = targetCard || activeHoverCard;
+    if (!card) return;
+
+    if (targetCard && activeHoverCard && targetCard !== activeHoverCard) {
+      return;
+    }
+
+    const iframe = card.querySelector('.card-video-preview');
+    if (iframe) iframe.remove();
+
+    card.classList.remove('is-playing-video');
+
+    const videoPill = card.querySelector('.media-pill.has-video');
+    if (videoPill && videoPill.dataset.defaultLabel) {
+      videoPill.textContent = videoPill.dataset.defaultLabel;
+    }
+
+    if (activeHoverCard === card) {
+      activeHoverCard = null;
+    }
+  }
+
+  function startCardVideoPreview(card) {
+    if (!canHoverPreview()) return;
+    const videoId = card?.dataset?.videoId;
+    const mediaEl = card?.querySelector('.card-media');
+    if (!videoId || !mediaEl) return;
+
+    if (activeHoverCard === card && mediaEl.querySelector('.card-video-preview')) {
+      return;
+    }
+
+    stopCardVideoPreview();
+    activeHoverCard = card;
+
+    hoverVideoTimer = setTimeout(() => {
+      hoverVideoTimer = null;
+      if (activeHoverCard !== card || !card.isConnected) return;
+
+      const iframe = document.createElement('iframe');
+      iframe.className = 'card-video-preview';
+      iframe.src = buildHoverVideoUrl(videoId);
+      iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.tabIndex = -1;
+      iframe.setAttribute('aria-hidden', 'true');
+
+      const markReady = () => {
+        if (activeHoverCard === card && iframe.isConnected) {
+          iframe.classList.add('is-ready');
+          card.classList.add('is-playing-video');
+        }
+      };
+
+      iframe.addEventListener('load', markReady, { once: true });
+      setTimeout(markReady, 450);
+
+      const videoPill = card.querySelector('.media-pill.has-video');
+      if (videoPill) {
+        if (!videoPill.dataset.defaultLabel) {
+          videoPill.dataset.defaultLabel = videoPill.textContent;
+        }
+        videoPill.textContent = '● Playing';
+      }
+
+      mediaEl.appendChild(iframe);
+    }, 180);
+  }
 
   function initProjectState() {
     PROJECTS_DATA.forEach(project => {
@@ -923,15 +1036,18 @@
     const photoCount = project.images?.length || (project.image ? 1 : 0);
     const hasVideo = project.videoIds.length > 0;
 
-    card.className = `project-card project-slot${isFlagship ? ' flagship-card' : ''}${isActive ? ' is-active' : ''}`;
+    card.className = `project-card project-slot${isFlagship ? ' flagship-card' : ''}${isActive ? ' is-active' : ''}${hasVideo ? ' has-video-preview' : ''}`;
     card.id = `project-${project.number}`;
     card.dataset.number = project.number;
+    if (hasVideo) {
+      card.dataset.videoId = project.videoIds[0];
+    }
 
     card.innerHTML = `
       ${primary ? `
         <div class="card-media">
           <img class="card-img-primary" src="${primary}" alt="${project.title}" loading="lazy" decoding="async">
-          ${hover ? `<img class="card-img-hover" src="${hover}" alt="${project.title} preview" loading="lazy" decoding="async">` : ''}
+          ${!hasVideo && hover ? `<img class="card-img-hover" src="${hover}" alt="${project.title} preview" loading="lazy" decoding="async">` : ''}
           <div class="media-top-badges">
             ${isFlagship ? '<span class="flagship-badge">Flagship</span>' : ''}
             ${isActive ? '<span class="viewing-badge">In Spotlight</span>' : ''}
@@ -966,10 +1082,16 @@
       </div>
     `;
 
+    if (hasVideo) {
+      card.addEventListener('mouseenter', () => startCardVideoPreview(card));
+      card.addEventListener('mouseleave', () => stopCardVideoPreview(card));
+    }
+
     return card;
   }
 
   function renderProjects() {
+    stopCardVideoPreview();
     const filtered = filterProjects(PROJECTS_DATA, activeFlags, 'all');
     const flagships = filtered
       .filter(p => p.flagship)
@@ -1100,6 +1222,7 @@
   function selectFeaturedProject(projectNumber) {
     const project = projectDatabase[projectNumber];
     if (!project) return;
+    stopCardVideoPreview();
 
     currentFeaturedNumber = projectNumber;
     carouselState[projectNumber] = {
@@ -1229,6 +1352,7 @@
   function openProjectModal(num) {
     const p = projectDatabase[num];
     if (!p) return;
+    stopCardVideoPreview();
     closeProjectModal();
 
     const paragraphs = p.details || [p.longDesc];
