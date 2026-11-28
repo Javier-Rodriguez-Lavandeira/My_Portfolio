@@ -369,7 +369,7 @@ const PROJECTS_DATA = [
       "Deployed on Cloudflare Workers with a dark Tailwind CSS interface, the application integrates AniList metadata, streaming provider links, and configurable broadcast notification lead times into a fast, cohesive web experience."
     ],
     image: "",
-    videoId: "",
+    videoId: "qGNPVBojb_I",
     images: [
       "img/project-016/1.png",
       "img/project-016/2.png"
